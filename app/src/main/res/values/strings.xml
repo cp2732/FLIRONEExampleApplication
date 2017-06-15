@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FLIR ONE Example Application</string>
+    <string name="change_view">Change View \u21EA</string>
+    <string name="change_view_retract">Change View \u21B2</string>
+    <string name="connectSim">Toggle Sim</string>
+    <string name="performTuning">Tune</string>
+    <string name="rotate_on">\u21BA</string>
+    <string name="rotate_off">\u21BB</string>
+    <string name="battery_label">Batt:</string>
+    <string name="txtTuning">Tuning&#8230;</string>
+    <string name="camera_icon_desc">Take a picture</string>
+    <string name="charging_icon_desc">Battery charging indicator</string>
+    <string name="live_footage_desc">Live footage</string>
+    <string name="gallery_desc">View Photo Gallery</string>
+    <string name="camera_reticle_desc">Center Crosshair</string>
+    <string name="startNetStream">Stream</string>
+    <string name="stopNetStream">Disconnect</string>
+    <string name="cable_desc">Cable</string>
+    <string name="no_charge">--</string>
+    <string name="connect_warning">Please Connect FLIR One</string>
+
+</resources>

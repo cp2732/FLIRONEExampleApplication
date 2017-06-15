@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/raw/default_camera_files.zip",
+        "source": "/Users/cp2732/.android/build-cache/0a172db449b4f4f32e545f184ef9906e71bd1e0e/output/res/raw/default_camera_files.zip"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/raw/sampleframes.zip",
+        "source": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/res/raw/sampleframes.zip"
+    }
+]
