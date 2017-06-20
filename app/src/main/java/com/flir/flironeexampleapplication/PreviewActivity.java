@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,9 +19,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.ScaleGestureDetector;
@@ -85,8 +88,21 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
     private volatile Device flirOneDevice;
     private FrameProcessor frameProcessor;
+    private Frame lastFrame;
 
     private String lastSavedPath;
+
+    /**
+     * Whether or not the system UI should be auto-hidden after
+     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+     */
+    private static boolean AUTO_HIDE = false;
+
+    /**
+     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int AUTO_HIDE_DELAY_MILLIS = 4000;
 
     private Device.TuningState currentTuningState = Device.TuningState.Unknown;
     // Device Delegate methods
@@ -107,6 +123,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         });
         
         flirOneDevice = device;
+        AUTO_HIDE = true;
+        quickHide();
         flirOneDevice.setPowerUpdateDelegate(this);
         flirOneDevice.startFrameStream(this);
 
@@ -117,6 +135,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 public void run() {
                     chargeCableButton.setChecked(chargeCableIsConnected);
                     chargeCableButton.setVisibility(View.VISIBLE);
+                    if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                        requestStoragePermission(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
                 }
             });
         }
@@ -139,7 +160,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     public void onDeviceDisconnected(Device device) {
         Log.w(TAG, "Called onDeviceDisconnected; Device disconnected!");
-        SystemClock.sleep(30); //prevents last image from being displayed after device is disconnected
+        SystemClock.sleep(35); //prevents last image from being displayed after device is disconnected
         final ToggleButton chargeCableButton = (ToggleButton) findViewById(R.id.chargeCableToggle);
         final TextView levelTextView = (TextView) findViewById(R.id.batteryLevelTextView);
         final ImageView chargingIndicator = (ImageView) findViewById(R.id.batteryChargeIndicator);
@@ -160,6 +181,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             }
         });
         flirOneDevice = null;
+        AUTO_HIDE = false;
+        mHideHandler.removeCallbacks(mHideRunnable);
         orientationEventListener.disable();
     }
 
@@ -402,46 +425,13 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
                         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                            // Should we show an explanation?
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(context,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                // Show an explanation to the user *asynchronously* -- don't block
-                                // this thread waiting for the user's response! After the user
-                                // sees the explanation, try again to request the permission.
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-                                        alert.setTitle("Please Grant Storage Permission");
-                                        alert.setMessage("In order to save images captured from the FLIR ONE device, "
-                                                + "please allow this app to access storage first.");
-
-                                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                            }
-                                        });
-                                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                ActivityCompat.requestPermissions(context,
-                                                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                                                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
-                                            }
-                                        });
-                                        alert.show();
-                                    }
-                                });
-                            }
-                            else {
-                                // No explanation needed, we can request the permission.
-                                ActivityCompat.requestPermissions(context,
-                                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
-                            }
+                            requestStoragePermission(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                            lastFrame = renderedImage.getFrame();
                         }
 
+                        //image will not be saved if asked for permission; save it in an instance variable and save it upon acceptance
                         renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+
                         //renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.VisibleUnalignedYUV888Image); //replaces depreciated VisualJPEGImage - not allowed though!
 
                         //FileOutputStream fos = new FileOutputStream(lastSavedPath);
@@ -521,6 +511,88 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         }
     }
 
+    public void requestStoragePermission(int permissionType) {
+        final Activity activity = this;
+
+        if (permissionType == MY_PERMISSIONS_REQUEST_READ_IMAGES) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                        alert.setTitle("Please Grant Storage Permission");
+                        alert.setMessage("In order to view saved images, "
+                                + "please allow this app to access storage first.");
+                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ActivityCompat.requestPermissions(activity,
+                                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
+                            }
+                        });
+                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                            }
+                        });
+                        alert.show();
+                    }
+                });
+            }
+            else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
+            }
+        }
+        else if (permissionType == MY_PERMISSIONS_REQUEST_WRITE_IMAGES) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                        alert.setTitle("Please Grant Storage Permission");
+                        alert.setMessage("In order to view saved images, "
+                                + "please allow this app to access storage first.");
+                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ActivityCompat.requestPermissions(activity,
+                                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                            }
+                        });
+                        alert.show();
+                    }
+                });
+            }
+            else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+            }
+        }
+    }
+
     /**
      * Callback method for handling permissions for reading, writing, and using Internet.
      * @param requestCode The type of permission requested, stored as an int
@@ -528,7 +600,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * @param grantResults Stores whether or not permission has been granted
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
                 // If request is cancelled, the result arrays are empty.
@@ -546,8 +618,18 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted
-
-                } else {
+                    if (lastFrame != null && lastSavedPath != null) {
+                        try {
+                            lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                        }
+                        catch (IOException e) {
+                            Log.w(TAG, "Could not save image after accepting permissions: " + e.getMessage());
+                        }
+                    }
+                    else
+                        Log.w(TAG, "Could not save image after accepting permissions: path or frame is null");
+                }
+                else {
                     // Permission was denied. Disable the functionality that depends on this permission.
 
                 }
@@ -571,18 +653,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     }
 
     /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
      * If set, will toggle the system UI visibility upon interaction. Otherwise,
      * will show the system UI visibility upon interaction.
      */
@@ -604,70 +674,44 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         }
     }
 
-    public void onCaptureImageClicked(View v) {
-        // if nothing's connected, let's load an image instead?
-        Log.d(TAG, "Called onCaptureImageClicked; flirOneDevice is " + flirOneDevice + " and lastSavedPath is " + lastSavedPath);
-        if (flirOneDevice == null && lastSavedPath != null) {
-            // load!
-            File file = new File(lastSavedPath);
-            try {
-                LoadedFrame frame = new LoadedFrame(file);
+    /** Trigger the initial hide() shortly after the FLIR One device has been
+     * connected, to briefly hint to the user that UI controls
+     * are available.
+     */
+    private void quickHide() {
+        delayedHide(100);
+        //mHideHandler.postDelayed(mHideRunnable, 100);
+    }
 
-                // load the frame
-                onFrameReceived(frame);
-            }
-            catch (RuntimeException e) {
-                Log.w(TAG, "Could not locate last image at \"" + lastSavedPath + "\" after simulation turned off. Skipping...");
-            }
+    public void onCaptureImageClicked(View v) {
+        if (flirOneDevice == null) {
+            final Context context = this;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                    alert.setTitle("FLIR One Not Found");
+                    alert.setMessage("In order to take a picture, please connect a FLIR One camera.");
+
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    });
+                    alert.show();
+                }
+            });
         }
-        else {
+        else
             this.imageCaptureRequested = true;
-        }
     }
 
     public void onOpenGalleryClicked(View v) {
         //Log.d(TAG, "Called onOpenGalleryClicked");
-        final Activity activity = this;
-        if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-
-                        alert.setTitle("Please Grant Storage Permission");
-                        alert.setMessage("In order to view saved images, "
-                                + "please allow this app to access storage first.");
-
-                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        });
-                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(activity,
-                                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
-                                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
-                            }
-                        });
-                        alert.show();
-                    }
-                });
-            }
-            else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
-                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
-            }
-        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            requestStoragePermission(MY_PERMISSIONS_REQUEST_READ_IMAGES);
         else
             startActivity(new Intent(this, GalleryActivity.class));
     }
@@ -853,8 +897,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         final View controlsViewTop = findViewById(R.id.fullscreen_content_controls_top);
         final View contentView = findViewById(R.id.fullscreen_content);
+        AUTO_HIDE = false;
 
-        HashMap<Integer, String> imageTypeNames = new HashMap<>();
+        SparseArray<String> imageTypeNames = new SparseArray<>();
         // Massage the type names for display purposes and skip any deprecated
         for (Field field : RenderedImage.ImageType.class.getDeclaredFields()) {
             if (field.isEnumConstant() && !field.isAnnotationPresent(Deprecated.class)) {
@@ -864,16 +909,16 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             }
         }
         String[] imageTypeNameValues = new String[imageTypeNames.size()];
-        for (Map.Entry<Integer, String> mapEntry : imageTypeNames.entrySet()) {
-            int index = mapEntry.getKey();
-            imageTypeNameValues[index] = mapEntry.getValue();
+        for (int i = 0; i < imageTypeNames.size(); ++i) {
+            int key = imageTypeNames.keyAt(i);
+            imageTypeNameValues[key] = imageTypeNames.get(key);
         }
 
         RenderedImage.ImageType defaultImageType = RenderedImage.ImageType.BlendedMSXRGBA8888Image;
         frameProcessor = new FrameProcessor(this, this, EnumSet.of(defaultImageType, RenderedImage.ImageType.ThermalRadiometricKelvinImage));
 
         ListView imageTypeListView = ((ListView) findViewById(R.id.imageTypeListView));
-        imageTypeListView.setAdapter(new ArrayAdapter<>(this,R.layout.emptytextview,imageTypeNameValues));
+        imageTypeListView.setAdapter(new ArrayAdapter<>(this, R.layout.emptytextview, imageTypeNameValues));
         imageTypeListView.setSelection(defaultImageType.ordinal());
         imageTypeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -944,7 +989,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     controlsView.setVisibility(visible ? View.VISIBLE : View.GONE);
                     controlsViewTop.setVisibility(visible ? View.VISIBLE : View.GONE);
                 }
-                if (visible && !((ToggleButton)findViewById(R.id.change_view_button)).isChecked() && AUTO_HIDE) {
+                if (visible && !((ToggleButton) findViewById(R.id.change_view_button)).isChecked() && AUTO_HIDE) {
                     // Schedule a hide().
                     delayedHide(AUTO_HIDE_DELAY_MILLIS);
                 }
@@ -1030,17 +1075,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         Device.stopDiscovery();
         flirOneDevice = null;
         super.onStop();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        //Log.d(TAG, "Called onPostCreate");
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
     }
 
     /**

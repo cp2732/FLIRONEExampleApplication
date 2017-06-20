@@ -3,6 +3,15 @@
 
     <item
         is-multidex="true"
+        jar="/Users/cp2732/.android/build-cache/981122cc79b07917ff7bd796090047cdae818f8b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="e300bd648b3784971b984858f0dde1cc66951964">
+        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_48afb3f9e282ee25e20105d64d112885845a0db3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
@@ -18,6 +27,33 @@
         revision="25.0.3"
         sha1="e5ef6e4822404221c9b03dff0d31e4810ac3fb0d">
         <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.0-beta2_8b1b382ea761981b76bd5bb15c20cb1e8ee7e70a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/cp2732/.android/build-cache/08d004f41b7442b960dea8411c49caebfa2b84aa/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="14b6254806b82e8c7c000963d9ea1a611950cc78">
+        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_894cd30405b8869b3eb75dfbb6ae1b9fbc14810e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/cp2732/.android/build-cache/040f1ded570e1899473640b6d8fac13bb0fa7ec2/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="5d8315789fd7530784fbbc72bb3ac1a016fa703c">
+        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f1d862c68f7172d488b5a349d702f0b1b329f03e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/cp2732/.android/build-cache/938e422754b379adfda9b7a2367aa87632216a40/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="eeb2226439fc09924584ada5b2f61a2ecdfe15a6">
+        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_437dad57b78cacf75e7a804e62a29b03db716001/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -57,6 +93,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3216bc63707b0a7ea97a9f8366ca5be1e82a0152">
+        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/cp2732/.android/build-cache/2ee6f1dcfa54473f05219fdc98b7456878d68c8f/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -72,51 +117,6 @@
         revision="25.0.0"
         sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
         <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5d08a3d2c9c3fa23216b9188635070e0c76a96f0/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/cp2732/.android/build-cache/981122cc79b07917ff7bd796090047cdae818f8b/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="e300bd648b3784971b984858f0dde1cc66951964">
-        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_48afb3f9e282ee25e20105d64d112885845a0db3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/cp2732/.android/build-cache/08d004f41b7442b960dea8411c49caebfa2b84aa/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="14b6254806b82e8c7c000963d9ea1a611950cc78">
-        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_894cd30405b8869b3eb75dfbb6ae1b9fbc14810e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/cp2732/.android/build-cache/040f1ded570e1899473640b6d8fac13bb0fa7ec2/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="5d8315789fd7530784fbbc72bb3ac1a016fa703c">
-        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f1d862c68f7172d488b5a349d702f0b1b329f03e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/cp2732/.android/build-cache/938e422754b379adfda9b7a2367aa87632216a40/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.3"
-        sha1="eeb2226439fc09924584ada5b2f61a2ecdfe15a6">
-        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_437dad57b78cacf75e7a804e62a29b03db716001/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="3216bc63707b0a7ea97a9f8366ca5be1e82a0152">
-        <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -151,7 +151,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.3"
-        sha1="ead587e2fa83aca476f5b13709355fd3c0dd9bf1">
+        sha1="d4a23ac262f565027bde765784cbf7951601cd2e">
         <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex" />
     </item>
 

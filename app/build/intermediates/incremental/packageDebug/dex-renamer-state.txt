@@ -1,7 +1,7 @@
-#Wed Jun 14 15:56:14 EDT 2017
-base.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5d08a3d2c9c3fa23216b9188635070e0c76a96f0
-renamed.1=classes.dex
-renamed.0=classes2.dex
-file.1=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex
-base.1=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a
-file.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5d08a3d2c9c3fa23216b9188635070e0c76a96f0/classes.dex
+#Thu Jun 15 14:44:47 EDT 2017
+base.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5d08a3d2c9c3fa23216b9188635070e0c76a96f0/classes.dex
+base.1=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5d08a3d2c9c3fa23216b9188635070e0c76a96f0
+file.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex

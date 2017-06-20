@@ -1,4 +1,4 @@
-#Wed Jun 14 15:56:14 EDT 2017
+#Thu Jun 15 13:45:17 EDT 2017
 file.2=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.0-beta2_8b1b382ea761981b76bd5bb15c20cb1e8ee7e70a/classes.dex
 base.2=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.0-beta2_8b1b382ea761981b76bd5bb15c20cb1e8ee7e70a
 file.1=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e205a65835bbc36be5e3a0864ec612bda49e567a/classes.dex

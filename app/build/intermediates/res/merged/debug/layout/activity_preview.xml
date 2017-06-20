@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:layout_weight="0"
-                android:src="@android:drawable/ic_lock_idle_charging"
-                android:tint="@color/accent_material_light"
+                android:src="@drawable/ic_lock_idle_charging"
+                android:tint="@color/deep_teal_500"
                 android:visibility="gone"
                 android:contentDescription="@string/charging_icon_desc" />
             <TextView
@@ -151,7 +151,7 @@
                 android:onClick="onOpenGalleryClicked"
                 android:src="@drawable/ic_menu_gallery"
                 android:adjustViewBounds="true"
-                android:maxWidth="520dp"
+                android:maxWidth="52dp"
                 android:maxHeight="52dp"
                 android:scaleType="fitCenter"
                 style="?metaButtonBarButtonStyle"/>
