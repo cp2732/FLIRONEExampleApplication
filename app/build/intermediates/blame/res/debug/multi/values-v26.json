@@ -108,8 +108,29 @@
                     "startLine": 16,
                     "startColumn": 4,
                     "startOffset": 896,
+                    "endLine": 19,
+                    "endColumn": 12,
+                    "endOffset": 1135
+                },
+                "from": {
+                    "file": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/values-v26/values-v26.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endLine": 5,
+                        "endColumn": 12,
+                        "endOffset": 294
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1140,
                     "endColumn": 92,
-                    "endOffset": 984
+                    "endOffset": 1228
                 },
                 "from": {
                     "file": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/values-v26/values-v26.xml",
@@ -119,6 +140,25 @@
                         "startOffset": 896,
                         "endColumn": 92,
                         "endOffset": 984
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 1233,
+                    "endColumn": 96,
+                    "endOffset": 1325
+                },
+                "from": {
+                    "file": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/values-v26/values-v26.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 299,
+                        "endColumn": 96,
+                        "endOffset": 391
                     }
                 }
             }

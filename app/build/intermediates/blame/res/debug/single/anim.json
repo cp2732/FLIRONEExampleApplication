@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/design_snackbar_out.xml",
+        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/anim/design_snackbar_out.xml"
+    },
+    {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
         "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/anim/abc_popup_exit.xml"
     },
@@ -34,6 +38,18 @@
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/tooltip_enter.xml",
         "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/anim/tooltip_enter.xml"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/design_snackbar_in.xml",
+        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/anim/design_snackbar_in.xml"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/anim/design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/anim/design_bottom_sheet_slide_out.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",

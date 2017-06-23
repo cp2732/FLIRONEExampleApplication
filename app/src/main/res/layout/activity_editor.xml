@@ -15,5 +15,6 @@
         android:maxHeight="52dp"
         android:scaleType="fitCenter"
         android:clickable="true"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClick"
+        android:contentDescription="@string/app_name"/>
 </LinearLayout>

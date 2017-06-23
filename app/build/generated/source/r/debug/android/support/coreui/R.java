@@ -8,19 +8,19 @@ package android.support.coreui;
 
 public final class R {
     public static final class attr {
-        public static final int font = 0x7f0100be;
-        public static final int fontProviderAuthority = 0x7f0100b7;
-        public static final int fontProviderCerts = 0x7f0100ba;
-        public static final int fontProviderFetchStrategy = 0x7f0100bb;
-        public static final int fontProviderFetchTimeout = 0x7f0100bc;
-        public static final int fontProviderPackage = 0x7f0100b8;
-        public static final int fontProviderQuery = 0x7f0100b9;
-        public static final int fontStyle = 0x7f0100bd;
-        public static final int fontWeight = 0x7f0100bf;
+        public static final int font = 0x7f0100e8;
+        public static final int fontProviderAuthority = 0x7f0100e1;
+        public static final int fontProviderCerts = 0x7f0100e4;
+        public static final int fontProviderFetchStrategy = 0x7f0100e5;
+        public static final int fontProviderFetchTimeout = 0x7f0100e6;
+        public static final int fontProviderPackage = 0x7f0100e2;
+        public static final int fontProviderQuery = 0x7f0100e3;
+        public static final int fontStyle = 0x7f0100e7;
+        public static final int fontWeight = 0x7f0100e9;
     }
     public static final class styleable {
-        public static final int[] FontFamily = { 0x7f0100b7, 0x7f0100b8, 0x7f0100b9, 0x7f0100ba, 0x7f0100bb, 0x7f0100bc };
-        public static final int[] FontFamilyFont = { 0x7f0100bd, 0x7f0100be, 0x7f0100bf };
+        public static final int[] FontFamily = { 0x7f0100e1, 0x7f0100e2, 0x7f0100e3, 0x7f0100e4, 0x7f0100e5, 0x7f0100e6 };
+        public static final int[] FontFamilyFont = { 0x7f0100e7, 0x7f0100e8, 0x7f0100e9 };
         public static final int FontFamilyFont_font = 1;
         public static final int FontFamilyFont_fontStyle = 0;
         public static final int FontFamilyFont_fontWeight = 2;

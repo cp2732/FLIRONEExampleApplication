@@ -120,7 +120,8 @@ public class SystemUiHiderHoneycomb extends SystemUiHiderBase {
                 mOnVisibilityChangeListener.onVisibilityChange(false);
                 mVisible = false;
 
-            } else {
+            }
+            else {
                 mAnchorView.setSystemUiVisibility(mShowFlags);
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     // Pre-Jelly Bean, we must manually show the action bar
