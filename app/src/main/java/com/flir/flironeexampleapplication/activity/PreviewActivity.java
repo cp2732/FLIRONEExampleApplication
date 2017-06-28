@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,11 +18,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.method.TextKeyListener;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
@@ -45,7 +44,6 @@ import com.flir.flironesdk.Device;
 import com.flir.flironesdk.FlirUsbDevice;
 import com.flir.flironesdk.Frame;
 import com.flir.flironesdk.FrameProcessor;
-import com.flir.flironesdk.LoadedFrame;
 import com.flir.flironesdk.RenderedImage;
 import com.flir.flironesdk.SimulatedDevice;
 
@@ -75,8 +73,8 @@ import java.util.Locale;
  * @see com.flir.flironesdk.Device.StreamDelegate
  * @see com.flir.flironesdk.Device.PowerUpdateDelegate
  */
-public class PreviewActivity extends Activity implements Device.Delegate, FrameProcessor.Delegate, Device.StreamDelegate, Device.PowerUpdateDelegate
-{
+public class PreviewActivity extends Activity implements Device.Delegate, FrameProcessor.Delegate, Device.StreamDelegate, Device.PowerUpdateDelegate {
+
     private static final String TAG = PreviewActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_IMAGES = 1, MY_PERMISSIONS_REQUEST_WRITE_IMAGES = 2,
         MY_PERMISSIONS_REQUEST_INTERNET_ACCESS = 3;
@@ -463,16 +461,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                         //image will not be saved if asked for permission; save it in an instance variable and save it upon acceptance
                         renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
 
-                        //renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.VisibleUnalignedYUV888Image); //replaces depreciated VisualJPEGImage - not allowed though!
-
-                        //FileOutputStream fos = new FileOutputStream(lastSavedPath);
-                        //fos.write(renderedImage.getBitmap());
-                        //fos.close();
-
-                        //MediaStore.Images.Media.insertImage(getContentResolver(), renderedImage.getBitmap(), "A Picture" , "My first image"); //save image to end of custom gallery
-
-                        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(lastSavedPath)));
-
                         MediaScannerConnection.scanFile(PreviewActivity.this,
                                 new String[]{ path + "/" + fileName }, null,
                                 new MediaScannerConnection.OnScanCompletedListener() {
@@ -548,134 +536,184 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * @param permissionType The type of permission (Read = 1, Write = 2)
      */
     public void requestStoragePermission(int permissionType) {
-        final Activity activity = this;
-        if (permissionType == MY_PERMISSIONS_REQUEST_READ_IMAGES) {
-            // Should we show an explanation for the permission we're requesting?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-                        alert.setTitle("Please Grant Storage Permission");
-                        alert.setMessage("In order to view saved images, "
-                                + "please allow this app to access storage first.");
-                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        });
-                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(activity,
-                                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
-                                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
-                            }
-                        });
-                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                            }
-                        });
-                        alert.show();
-                    }
-                });
+        switch (permissionType) {
+            case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
+                // Should we show an explanation for the permission we're requesting?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                            alert.setTitle("Please Grant Storage Permission");
+                            alert.setMessage("In order to view saved images, "
+                                    + "please allow this app to access storage first.");
+                            alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                }
+                            });
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ActivityCompat.requestPermissions(PreviewActivity.this,
+                                            new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                                            MY_PERMISSIONS_REQUEST_READ_IMAGES);
+                                }
+                            });
+                            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                }
+                            });
+                            alert.show();
+                        }
+                    });
+                }
+                else {
+                    // No explanation needed, we can request the permission immediately.
+                    ActivityCompat.requestPermissions(PreviewActivity.this,
+                            new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                            MY_PERMISSIONS_REQUEST_READ_IMAGES);
+                }
+                break;
             }
-            else {
-                // No explanation needed, we can request the permission immediately.
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
-                        MY_PERMISSIONS_REQUEST_READ_IMAGES);
-            }
-        }
-        else if (permissionType == MY_PERMISSIONS_REQUEST_WRITE_IMAGES) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-                        alert.setTitle("Please Grant Storage Permission");
-                        alert.setMessage("In order to save images, "
-                                + "please allow this app to access storage first.");
-                        alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        });
-                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(activity,
-                                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
-                            }
-                        });
-                        alert.show();
-                    }
-                });
-            }
-            else {
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                        MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+            case MY_PERMISSIONS_REQUEST_WRITE_IMAGES: {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(PreviewActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                            alert.setTitle("Please Grant Storage Permission");
+                            alert.setMessage("In order to save images, "
+                                    + "please allow this app to access storage first.");
+                            alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                }
+                            });
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ActivityCompat.requestPermissions(PreviewActivity.this,
+                                            new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                                            MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                                }
+                            });
+                            alert.show();
+                        }
+                    });
+                }
+                else {
+                    ActivityCompat.requestPermissions(PreviewActivity.this,
+                            new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                            MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                }
+                break;
             }
         }
     }
 
     /**
      * Callback method for handling permissions for reading, writing, and using Internet.
-     * @param requestCode The type of permission requested, stored as an int
-     * @param permissions
+     * @param requestCode The project defined type of permission requested (such as "MY_PERMISSIONS_REQUEST_READ_IMAGES")
+     * @param permissions The android type of permission requested (such as "Manifest.permission.READ_EXTERNAL_STORAGE")
      * @param grantResults Stores whether or not permission has been granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "Read permission granted");
-                    startActivity(new Intent(this, GalleryActivity.class));
+        if (permissions.length < 1)
+            return;
+        boolean allPermissionsGranted = true;
+        for (int grantResult: grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false;
+                break;
+            }
+        }
+        if (!allPermissionsGranted) {
+            boolean somePermissionsForeverDenied = false;
+            for (String permission: permissions) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                    //denied
+                    Log.i("denied", permission);
                 }
                 else {
-                    Log.i(TAG, "Read permission denied");
-                }
-                return;
-            }
-            case MY_PERMISSIONS_REQUEST_WRITE_IMAGES: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "Write permission granted");
-                    if (lastFrame != null && lastSavedPath != null) {
-                        try {
-                            lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
-                        }
-                        catch (IOException e) {
-                            Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
-                        }
+                    if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+                        //allowed
+                        Log.i("allowed", permission);
                     }
                     else {
-                        // May occur if activity is paused, permissions are reset, and
-                        // permissions are accepted again in app when FLIR One device is reconnected
-                        Log.w(TAG, "Permissions were accepted, but path or saved frame is null (frame could not be saved)");
+                        //set to never ask again
+                        Log.i("set to never ask again", permission);
+                        somePermissionsForeverDenied = true;
+                    }
+                }
+            }
+            if (somePermissionsForeverDenied) {
+                //find out the permission that was denied and customize alert dialog
+                String action, category;
+                switch (requestCode) {
+                    case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                        action = "view captured images";
+                        category = "Storage";
+                        break;
+                    case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
+                        action = "save captured images";
+                        category = "Storage";
+                        break;
+                    default:
+                        action = "enable permissions again";
+                        category = "the desired permission";
+                }
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
+                        .setMessage("You have opted out of receiving requests to enable " +
+                                "permissions in this app. To " + action + ", please " +
+                                "tap Settings, Permissions, and allow " + category + ".")
+                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.fromParts("package", getPackageName(), null));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setCancelable(true)
+                        .create()
+                        .show();
+            }
+        }
+        else {
+            //permissions were accepted; perform actions that depend on permissions
+            if (requestCode == MY_PERMISSIONS_REQUEST_READ_IMAGES)
+                    startActivity(new Intent(this, GalleryActivity.class));
+            else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_IMAGES) {
+                if (lastFrame != null && lastSavedPath != null) {
+                    try {
+                        lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                    }
+                    catch (IOException e) {
+                        Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
                     }
                 }
                 else {
-                    Log.i(TAG, "Write permission denied");
+                    // Will occur if activity is paused, permissions are revoked, and are
+                    // accepted again in the app after the FLIR One device is re-detected
+                    Log.w(TAG, "Permissions were accepted, but path or saved frame is null (frame could not be saved)");
                 }
-                return;
             }
-            case MY_PERMISSIONS_REQUEST_INTERNET_ACCESS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "Internet permissions were granted");
-                }
-                else {
-                    Log.i(TAG, "Internet permissions were denied");
-                }
-                return;
-            }
-            // other 'case' lines to check for other
+            // other 'else if' lines to check for other
             // permissions this app might request
+            else
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -722,12 +760,11 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     public void onCaptureImageClicked(View v) {
         if (flirOneDevice == null) {
-            final Context context = this;
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
 
                     alert.setTitle("FLIR One Not Found");
                     alert.setMessage("In order to take a picture, please connect a FLIR One camera.");
@@ -1173,7 +1210,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     @Override
     public void onStop() {
         // We must unregister our usb receiver, otherwise we will steal events from other apps
-        Log.e(TAG, "onStop, stopping discovery!");
+        Log.d(TAG, "onStop, stopping discovery!");
         Device.stopDiscovery();
         flirOneDevice = null;
         super.onStop();

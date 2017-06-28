@@ -22,20 +22,6 @@
         android:versionCode="1"
         android:versionName="1.0" >
         <activity
-            android:name="com.flir.flironeexampleapplication.activity.EditorActivity"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="image/jpeg" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="com.flir.flironeexampleapplication.activity.PreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/main_app_name"
@@ -59,26 +45,25 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
+            android:name="com.flir.flironeexampleapplication.activity.EditorActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.flir.flironeexampleapplication.activity.GalleryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/gallery_app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppCompat" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.SEND" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
         </activity>
 
         <meta-data

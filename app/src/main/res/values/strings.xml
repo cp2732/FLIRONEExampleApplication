@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_app_name">IR Street View Application</string>
+    <string name="app_name">IR Street View</string>
+    <string name="main_app_name">IR Street View</string>
     <string name="gallery_app_name">IR Street View Gallery</string>
     <string name="connect_warning">Please Connect FLIR One</string>
     <string name="change_view">Change View \u21EA</string>
