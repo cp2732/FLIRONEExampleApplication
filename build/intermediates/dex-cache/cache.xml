@@ -88,7 +88,7 @@
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
-        sha1="9bbdd1a035b99d24d9fd3a90f75da68559b56339">
+        sha1="b8c8cc4145f4fb0423fb8c5653cea7f8e3480f8f">
         <dex dex="/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_efdcb93743b5d86c4fca49ab42718bf4fb16ad7a/classes.dex" />
     </item>
     <item

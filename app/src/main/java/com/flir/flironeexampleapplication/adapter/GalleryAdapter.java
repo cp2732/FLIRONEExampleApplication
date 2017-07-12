@@ -32,29 +32,33 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
         public MyViewHolder(View view) {
             super(view);
+            //Log.d(TAG, "Called MyViewHolder");
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
         }
     }
 
     public GalleryAdapter(Context context, ArrayList<Image> images) {
+        //Log.d(TAG, "Called GalleryAdapter Constructor");
         mContext = context;
         this.images = images;
     }
 
     public void updateImages(ArrayList<Image> images) {
+        //Log.d(TAG, "Called updateImages");
         this.images = images;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //Log.d(TAG, "Called onCreateViewHolder");
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.gallery_thumbnail, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        //Log.d(TAG, "Called onBindViewHolder");
         Image image = images.get(position);
 
         Glide.with(mContext).load(image.getPath())
@@ -66,6 +70,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
+        //Log.d(TAG, "Called getItemCount; count is " + images.size());
+        if (images == null) {
+            Log.e(TAG, "getItemCount says images is null!");
+            return 0;
+        }
         return images.size();
     }
 
@@ -77,6 +86,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
     public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
+        private String TAG = RecyclerTouchListener.class.getSimpleName();
         private GestureDetector gestureDetector;
         private GalleryAdapter.ClickListener clickListener;
 
@@ -85,11 +95,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
+                    //Log.d(TAG, "Called onSingleTapUp");
                     return true;
                 }
 
                 @Override
                 public void onLongPress(MotionEvent e) {
+                    //Log.d(TAG, "Called onLongPress");
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null && clickListener != null) {
                         clickListener.onLongClick(child, recyclerView.getChildAdapterPosition(child));
@@ -100,7 +112,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
+            //Log.d(TAG, "Called onInterceptTouchEvent");
             View child = rv.findChildViewUnder(e.getX(), e.getY());
             if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
                 clickListener.onClick(child, rv.getChildAdapterPosition(child));
@@ -110,11 +122,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            //Log.d(TAG, "Called onTouchEvent");
         }
 
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
+            //Log.d(TAG, "Called onRequestDisallowInterceptTouchEvent");
         }
     }
 }

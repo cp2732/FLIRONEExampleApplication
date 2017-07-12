@@ -44,19 +44,20 @@ public class GalleryActivity extends AppCompatActivity {
 
     private String TAG = GalleryActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_READ_IMAGES = 1;
+    private static boolean requestingPermission = false;
 
     private ArrayList<Image> images;
     private GalleryAdapter mAdapter;
     private RecyclerView recyclerView;
+
+    //This instance variables is saved for an image that is sent by an Intent to this app from another app
+    private Uri pendingImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery);
         Log.d(TAG, "Called onCreate");
-
-        images = new ArrayList<>();
-        mAdapter = new GalleryAdapter(this, images);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,14 +66,19 @@ public class GalleryActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        images = new ArrayList<>();
+        mAdapter = new GalleryAdapter(this, images);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.addOnItemTouchListener(new GalleryAdapter.RecyclerTouchListener(getApplicationContext(), recyclerView, new GalleryAdapter.ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                //Log.d(TAG, "Called onClick");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("images", images);
                 bundle.putInt("position", position);
@@ -85,34 +91,24 @@ public class GalleryActivity extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
+                //Log.d(TAG, "Called onLongClick");
                 //perhaps we can make editing options appear?
+                /*btnDelete.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        File file = new File(imagePath);
+                        if(file.exist())
+                            file.delete();
+                    }
+                });*/
             }
         }));
-
-        // Get the intent that started this activity
-        Intent intent = getIntent();
-
-        if (intent.getType() != null) {
-            Bundle imageBundle = intent.getExtras();
-            Uri imageUri = (Uri) imageBundle.get(Intent.EXTRA_STREAM);
-            File f = new File("" + imageUri);
-            // Figure out what to do based on the intent type
-            if (intent.getType().contains("image/")) {
-                // Handle intents with image data...
-                verifyPermissions();
-                Bitmap image = getBitmapFromURI(imageUri);
-
-                if (image != null)
-                    saveBitmap(image, f.getName());
-                else
-                    Log.w(TAG, "Bitmap is corrupt; cannot save image");
-            }
-            //else if there is another intent type that started the activity, put it here
-        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //Log.d(TAG, "Called onOptionsItemSelected");
         // handle arrow click here
         if (item.getItemId() == android.R.id.home)
             finish();
@@ -126,13 +122,41 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "Called onStart");
+        images = new ArrayList<>(); //need to prevent IllegalStateException
+        recyclerView.setAdapter(mAdapter);
+
+        Intent intent = getIntent();
+        Log.d(TAG, "Calling intent, type is " + intent.getType());
+
+        if (intent.getType() == null)
+            Log.i(TAG, "intent.getType is null");
+        if (intent.getExtras() == null)
+            Log.i(TAG, "intent.getExtras is null");
+
+        if (intent.getType() != null) {
+            Bundle imageBundle = intent.getExtras();
+
+
+            Log.d(TAG, "TYPE IS: " + intent.getType());
+            // Figure out what to do based on the intent type
+            if (intent.getType().contains("image/")) {
+                // Handle intents with image data...
+                pendingImage = (Uri) imageBundle.get(Intent.EXTRA_STREAM);
+                Log.d(TAG, "IMAGE FOUND; image is " + pendingImage);
+                setResult(RESULT_OK); //default intent for return to calling activity
+            }
+            //else if there is another intent type that started the activity, put it here
+        }
         verifyPermissions();
     }
 
     private void verifyPermissions() {
-        Log.d(TAG, "Called verifyPermissions");
+        //Log.d(TAG, "Called verifyPermissions");
+        if (requestingPermission)
+            return;
         if (ContextCompat.checkSelfPermission(GalleryActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestingPermission = true;
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 runOnUiThread(new Runnable() {
@@ -144,6 +168,7 @@ public class GalleryActivity extends AppCompatActivity {
                                 + "please allow this app to access storage first.");
                         alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                requestingPermission = false;
                                 finish();
                             }
                         });
@@ -157,6 +182,7 @@ public class GalleryActivity extends AppCompatActivity {
                         alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
+                                requestingPermission = false;
                                 finish();
                             }
                         });
@@ -182,95 +208,100 @@ public class GalleryActivity extends AppCompatActivity {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.d(TAG, "Called onRequestPermissionsResult");
-        if (permissions.length < 1)
-            return;
-        boolean allPermissionsGranted = true;
-        for (int grantResult: grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                allPermissionsGranted = false;
-                break;
-            }
-        }
-        if (!allPermissionsGranted) {
-            boolean somePermissionsForeverDenied = false;
-            for (String permission: permissions) {
-                // if we are still allowed to show the permissions dialog, it means the user denied the request
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    // denied
-                    Log.i("denied", permission);
-                    finish();
+        //Log.d(TAG, "Called onRequestPermissionsResult");
+        boolean somePermissionsForeverDenied = false;
+        if (permissions.length >= 1) {
+            boolean allPermissionsGranted = true;
+            for (int grantResult: grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
                 }
-                else {
-                    // if we find that the permissions were granted, then we're good to go with what depends on them
-                    if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
-                        //allowed
-                        Log.i("allowed", permission);
+            }
+            if (!allPermissionsGranted) {
+                for (String permission: permissions) {
+                    // if we are still allowed to show the permissions dialog, it means the user denied the request
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        // denied
+                        Log.i("denied", permission);
+                        finish();
                     }
-                    // if permissions were not granted and permission dialogs are set to be
-                    // permanently off, the "Never show again" option was selected
                     else {
-                        //set to never ask again
-                        Log.i("set to never ask again", permission);
-                        somePermissionsForeverDenied = true;
+                        // if we find that the permissions were granted, then we're good to go with what depends on them
+                        if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+                            //allowed
+                            Log.i("allowed", permission);
+                        }
+                        // if permissions were not granted and permission dialogs are set to be
+                        // permanently off, the "Never show again" option was selected
+                        else {
+                            //set to never ask again
+                            Log.i("set to never ask again", permission);
+                            somePermissionsForeverDenied = true;
+                        }
                     }
                 }
-            }
-            if (somePermissionsForeverDenied) {
-                //find out the permission that was denied and customize alert dialog
-                String action, category;
-                switch (requestCode) {
-                    case MY_PERMISSIONS_REQUEST_READ_IMAGES:
-                        action = "view captured images";
-                        category = "Storage";
-                        break;
-                    default:
-                        action = "enable permissions again";
-                        category = "the desired permission";
-                }
+                if (somePermissionsForeverDenied) {
+                    //find out the permission that was denied and customize alert dialog
+                    String action, category;
+                    switch (requestCode) {
+                        case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                            action = "view captured images";
+                            category = "Storage";
+                            break;
+                        default:
+                            action = "enable permissions again";
+                            category = "the desired permission";
+                    }
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
-                        .setMessage("You have opted out of receiving requests to enable " +
-                                "permissions in this app. To " + action + ", please " +
-                                "tap Settings, Permissions, and allow " + category + ".")
-                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.fromParts("package", getPackageName(), null));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                finish();
-                            }
-                        })
-                        .create()
-                        .show();
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                    alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
+                            .setMessage("You have opted out of receiving requests to enable " +
+                                    "permissions in this app. To " + action + ", please " +
+                                    "tap Settings, Permissions, and allow " + category + ".")
+                            .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                            Uri.fromParts("package", getPackageName(), null));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    requestingPermission = false;
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    requestingPermission = false;
+                                    finish();
+                                }
+                            })
+                            .create()
+                            .show();
+                }
+            }
+            else {
+                //permissions were accepted; perform actions that depend on permissions
+                if (requestCode == MY_PERMISSIONS_REQUEST_READ_IMAGES)
+                    refreshView();
+                    // other 'else if' lines to check for other
+                    // permissions this app might request
+                else
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
-        else {
-            //permissions were accepted; perform actions that depend on permissions
-            if (requestCode == MY_PERMISSIONS_REQUEST_READ_IMAGES)
-                refreshView();
-            // other 'else if' lines to check for other
-            // permissions this app might request
-            else
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        if (!somePermissionsForeverDenied)
+            requestingPermission = false;
     }
 
     private Bitmap getBitmapFromURI(Uri imageUri) {
+        //Log.d(TAG, "Called getBitmapFromURI");
         if (imageUri != null) {
             try {
                 return MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
@@ -287,6 +318,7 @@ public class GalleryActivity extends AppCompatActivity {
      * @param bitmapImage The bitmap of an image from another application
      */
     private void saveBitmap(Bitmap bitmapImage, String fileName) {
+        //Log.d(TAG, "Called saveBitmap");
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
         // Create imageDir
@@ -311,24 +343,36 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshView() {
+    public void refreshView() {
         Log.d(TAG, "Called refreshView");
-        images.clear();
-        images = prepareData();
-        mAdapter.updateImages(images);
+        if (pendingImage != null) {
+            saveBitmap(getBitmapFromURI(pendingImage), new File("" + pendingImage).getName());
+            //Log.w(TAG, "Bitmap is corrupt; cannot save image");
+            pendingImage = null;
+            recyclerView.setAdapter(mAdapter);
+        }
+        Log.d(TAG, "Old size was " + images.size());
+        prepareData(images);
         mAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(mAdapter);
+        mAdapter.updateImages(images);
+        Log.d(TAG, "New size is " + images.size());
+        //Log.d(TAG, "images.size is " + images.size());
     }
 
-    private ArrayList<Image> prepareData() {
-        ArrayList<Image> imageList = new ArrayList<>();
+    private void prepareData(ArrayList<Image> imageList) {
+        //Log.d(TAG, "Called prepareData");
+
+        if (imageList == null)
+            imageList = new ArrayList<>();
+        else
+            imageList.clear();
 
         String mainPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         File f = new File(mainPath);
         File files[] = f.listFiles();
         if (files == null) {
             Log.w(TAG, "Main directory does not exist or an I/O error occurred while retrieving images!");
-            return imageList;
+            return;
         }
         for (File nextFile: files)
         {
@@ -338,6 +382,5 @@ public class GalleryActivity extends AppCompatActivity {
             image.setTimestamp(Long.toString(SystemClock.currentThreadTimeMillis()));
             imageList.add(image);
         }
-        return imageList;
     }
 }

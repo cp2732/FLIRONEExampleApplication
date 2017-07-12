@@ -76,6 +76,7 @@ import java.util.Locale;
 public class PreviewActivity extends Activity implements Device.Delegate, FrameProcessor.Delegate, Device.StreamDelegate, Device.PowerUpdateDelegate {
 
     private static final String TAG = PreviewActivity.class.getSimpleName();
+    private static boolean requestingPermission = false;
     private static final int MY_PERMISSIONS_REQUEST_READ_IMAGES = 1, MY_PERMISSIONS_REQUEST_WRITE_IMAGES = 2,
         MY_PERMISSIONS_REQUEST_INTERNET_ACCESS = 3;
 
@@ -141,9 +142,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 public void run() {
                     chargeCableButton.setChecked(chargeCableIsConnected);
                     chargeCableButton.setVisibility(View.VISIBLE);
-                    if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                        requestStoragePermission(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                    isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
                 }
             });
         }
@@ -452,11 +451,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     try {
                         lastSavedPath = path + "/" + fileName;
 
-                        if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            requestStoragePermission(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                        if (isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES))
                             lastFrame = renderedImage.getFrame();
-                        }
 
                         //image will not be saved if asked for permission; save it in an instance variable and save it upon acceptance
                         renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
@@ -535,9 +531,18 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * if trying to take a picture.
      * @param permissionType The type of permission (Read = 1, Write = 2)
      */
-    public void requestStoragePermission(int permissionType) {
+    public boolean isPermissionNeeded(int permissionType) {
+        //if we are already requesting permission, we should indicate that permission
+        //is still needed for whatever is calling on this method just to be safe
+        if (requestingPermission)
+            return false;
+
         switch (permissionType) {
             case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED)
+                    return false;
+                requestingPermission = true;
                 // Should we show an explanation for the permission we're requesting?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -565,6 +570,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialogInterface) {
+                                    requestingPermission = false;
                                 }
                             });
                             alert.show();
@@ -577,9 +583,13 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
                             MY_PERMISSIONS_REQUEST_READ_IMAGES);
                 }
-                break;
+                return true;
             }
             case MY_PERMISSIONS_REQUEST_WRITE_IMAGES: {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED)
+                    return false;
+                requestingPermission = true;
                 if (ActivityCompat.shouldShowRequestPermissionRationale(PreviewActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     runOnUiThread(new Runnable() {
@@ -591,6 +601,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                                     + "please allow this app to access storage first.");
                             alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
+                                    requestingPermission = false;
                                 }
                             });
                             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -609,9 +620,11 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
                             MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
                 }
-                break;
+                return true;
             }
+            default:
         }
+        return false;
     }
 
     /**
@@ -622,99 +635,107 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (permissions.length < 1)
-            return;
-        boolean allPermissionsGranted = true;
-        for (int grantResult: grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                allPermissionsGranted = false;
-                break;
-            }
-        }
-        if (!allPermissionsGranted) {
-            boolean somePermissionsForeverDenied = false;
-            for (String permission: permissions) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    //denied
-                    Log.i("denied", permission);
+        boolean somePermissionsForeverDenied = false;
+        if (permissions.length >= 1) {
+            boolean allPermissionsGranted = true;
+            for (int grantResult: grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
                 }
-                else {
-                    if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
-                        //allowed
-                        Log.i("allowed", permission);
+            }
+            if (!allPermissionsGranted) {
+                for (String permission: permissions) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        //denied
+                        Log.i("denied", permission);
                     }
                     else {
-                        //set to never ask again
-                        Log.i("set to never ask again", permission);
-                        somePermissionsForeverDenied = true;
+                        if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+                            //allowed
+                            Log.i("allowed", permission);
+                        } else {
+                            //set to never ask again
+                            Log.i("set to never ask again", permission);
+                            somePermissionsForeverDenied = true;
+                        }
                     }
                 }
-            }
-            if (somePermissionsForeverDenied) {
-                //find out the permission that was denied and customize alert dialog
-                String action, category;
-                switch (requestCode) {
-                    case MY_PERMISSIONS_REQUEST_READ_IMAGES:
-                        action = "view captured images";
-                        category = "Storage";
-                        break;
-                    case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
-                        action = "save captured images";
-                        category = "Storage";
-                        break;
-                    default:
-                        action = "enable permissions again";
-                        category = "the desired permission";
-                }
+                if (somePermissionsForeverDenied) {
+                    //find out the permission that was denied and customize alert dialog
+                    String action, category;
+                    switch (requestCode) {
+                        case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                            action = "view captured images";
+                            category = "Storage";
+                            break;
+                        case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
+                            action = "save captured images";
+                            category = "Storage";
+                            break;
+                        default:
+                            action = "enable permissions again";
+                            category = "the desired permission";
+                    }
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
-                        .setMessage("You have opted out of receiving requests to enable " +
-                                "permissions in this app. To " + action + ", please " +
-                                "tap Settings, Permissions, and allow " + category + ".")
-                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.fromParts("package", getPackageName(), null));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setCancelable(true)
-                        .create()
-                        .show();
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                    alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
+                            .setMessage("You have opted out of receiving requests to enable " +
+                                    "permissions in this app. To " + action + ", please " +
+                                    "tap Settings, Permissions, and allow " + category + ".")
+                            .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                            Uri.fromParts("package", getPackageName(), null));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    requestingPermission = false;
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    requestingPermission = false;
+                                }
+                            })
+                            .setCancelable(true)
+                            .create()
+                            .show();
+                }
             }
-        }
-        else {
-            //permissions were accepted; perform actions that depend on permissions
-            if (requestCode == MY_PERMISSIONS_REQUEST_READ_IMAGES)
+            else {
+                //permissions were accepted; perform actions that depend on permissions
+                if (requestCode == MY_PERMISSIONS_REQUEST_READ_IMAGES)
                     startActivity(new Intent(this, GalleryActivity.class));
-            else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_IMAGES) {
-                if (lastFrame != null && lastSavedPath != null) {
-                    try {
-                        lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                else if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_IMAGES) {
+                    if (lastFrame != null && lastSavedPath != null) {
+                        try {
+                            lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                        }
+                        catch (IOException e) {
+                            Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
+                        }
                     }
-                    catch (IOException e) {
-                        Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
+                    else {
+                        // Will occur if activity is paused, permissions are revoked, and are
+                        // accepted again in the app after the FLIR One device is re-detected
+                        Log.w(TAG, "Permissions were accepted, but path or saved frame is null (frame could not be saved)");
                     }
                 }
-                else {
-                    // Will occur if activity is paused, permissions are revoked, and are
-                    // accepted again in the app after the FLIR One device is re-detected
-                    Log.w(TAG, "Permissions were accepted, but path or saved frame is null (frame could not be saved)");
-                }
+                // other 'else if' lines to check for other
+                // permissions this app might request
+                else
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
-            // other 'else if' lines to check for other
-            // permissions this app might request
-            else
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+        if (!somePermissionsForeverDenied)
+            requestingPermission = false;
     }
 
     /**
@@ -787,10 +808,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     public void onOpenGalleryClicked(View v) {
         //Log.d(TAG, "Called onOpenGalleryClicked");
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            requestStoragePermission(MY_PERMISSIONS_REQUEST_READ_IMAGES);
-        else
+        if (!isPermissionNeeded(MY_PERMISSIONS_REQUEST_READ_IMAGES))
             startActivity(new Intent(this, GalleryActivity.class));
     }
 
@@ -999,31 +1017,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         }.start();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "Called onStart");
-        thermalImageView = (ImageView) findViewById(R.id.imageView);
-        if (Device.getSupportedDeviceClasses(this).contains(FlirUsbDevice.class)){
-            findViewById(R.id.pleaseConnect).setVisibility(View.VISIBLE);
-        }
-        try {
-            Device.startDiscovery(this, this);
-        }
-        catch (IllegalStateException e) {
-            //Log.d(TAG, "caught IllegalStateException in onStart");
-            // it's okay if we've already started discovery
-        }
-        catch (SecurityException e) {
-            // On some platforms, we need the user to select the app to give us permission to the USB device.
-            Toast.makeText(this, "Please insert FLIR One and select " +
-                    getString(R.string.app_name), Toast.LENGTH_LONG).show();
-            // There is likely a cleaner way to recover, but for now, exit the activity and
-            // wait for user to follow the instructions;
-            finish();
-        }
-    }
-
     ScaleGestureDetector mScaleDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1190,11 +1183,27 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "Called onPause");
-        if (flirOneDevice != null) {
-            flirOneDevice.stopFrameStream();
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "Called onStart");
+        thermalImageView = (ImageView) findViewById(R.id.imageView);
+        if (Device.getSupportedDeviceClasses(this).contains(FlirUsbDevice.class)){
+            findViewById(R.id.pleaseConnect).setVisibility(View.VISIBLE);
+        }
+        try {
+            Device.startDiscovery(this, this);
+        }
+        catch (IllegalStateException e) {
+            //Log.d(TAG, "caught IllegalStateException in onStart");
+            // it's okay if we've already started discovery
+        }
+        catch (SecurityException e) {
+            // On some platforms, we need the user to select the app to give us permission to the USB device.
+            Toast.makeText(this, "Please insert FLIR One and select " +
+                    getString(R.string.app_name), Toast.LENGTH_LONG).show();
+            // There is likely a cleaner way to recover, but for now, exit the activity and
+            // wait for user to follow the instructions;
+            finish();
         }
     }
 
@@ -1204,6 +1213,15 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         Log.d(TAG, "Called onResume");
         if (flirOneDevice != null) {
             flirOneDevice.startFrameStream(this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "Called onPause");
+        if (flirOneDevice != null) {
+            flirOneDevice.stopFrameStream();
         }
     }
 
