@@ -11,6 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +42,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.flir.flironeexampleapplication.R;
+import com.flir.flironeexampleapplication.helper.LocationProvider;
+import com.flir.flironeexampleapplication.helper.SensorHelper;
+import com.flir.flironeexampleapplication.helper.GPS;
 import com.flir.flironeexampleapplication.util.SystemUiHider;
 import com.flir.flironesdk.Device;
 import com.flir.flironesdk.FlirUsbDevice;
@@ -62,10 +68,10 @@ import java.util.EnumSet;
 import java.util.Locale;
 
 /**
- * Created by Chris Puda on 05/30/2017.
+ * Extended by Chris Puda on 05/30/2017.
+ *
  * A prototype Android street view app using infrared overlays. This expands from
  * an example activity provided by FLIR One.
- * Extended by Chris Puda on 05/30/2017.
  *
  * @see SystemUiHider
  * @see com.flir.flironesdk.Device.Delegate
@@ -77,8 +83,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
     private static final String TAG = PreviewActivity.class.getSimpleName();
     private static boolean requestingPermission = false;
+    private static String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
     private static final int MY_PERMISSIONS_REQUEST_READ_IMAGES = 1, MY_PERMISSIONS_REQUEST_WRITE_IMAGES = 2,
-        MY_PERMISSIONS_REQUEST_INTERNET_ACCESS = 3;
+            MY_PERMISSIONS_REQUEST_LOCATION = 3, MY_PERMISSIONS_REQUEST_INTERNET_ACCESS = 4;
 
     ImageView thermalImageView;
     private volatile boolean imageCaptureRequested = false;
@@ -87,6 +94,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
     private int deviceRotation = 0;
     private OrientationEventListener orientationEventListener;
+
+    private SensorHelper sensorHelper;
 
     private volatile Device flirOneDevice;
     private FrameProcessor frameProcessor;
@@ -135,7 +144,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         flirOneDevice.setPowerUpdateDelegate(this);
         flirOneDevice.startFrameStream(this);
 
-        final ToggleButton chargeCableButton = (ToggleButton) findViewById(R.id.chargeCableToggle);
+        final ToggleButton chargeCableButton = findViewById(R.id.chargeCableToggle);
         if (flirOneDevice instanceof SimulatedDevice) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -167,9 +176,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     public void onDeviceDisconnected(Device device) {
         Log.w(TAG, "Called onDeviceDisconnected; Device disconnected!");
         SystemClock.sleep(35); //prevents last image from being displayed after device is disconnected
-        final ToggleButton chargeCableButton = (ToggleButton) findViewById(R.id.chargeCableToggle);
-        final TextView levelTextView = (TextView) findViewById(R.id.batteryLevelTextView);
-        final ImageView chargingIndicator = (ImageView) findViewById(R.id.batteryChargeIndicator);
+        final ToggleButton chargeCableButton = findViewById(R.id.chargeCableToggle);
+        final TextView levelTextView = findViewById(R.id.batteryLevelTextView);
+        final ImageView chargingIndicator = findViewById(R.id.batteryChargeIndicator);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -248,7 +257,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageView chargingIndicator = (ImageView) findViewById(R.id.batteryChargeIndicator);
+                ImageView chargingIndicator = findViewById(R.id.batteryChargeIndicator);
                 if (originalChargingIndicatorColor == null) {
                     originalChargingIndicatorColor = chargingIndicator.getColorFilter();
                 }
@@ -282,7 +291,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     public void onBatteryPercentageReceived(final byte percentage) {
         //Log.i(TAG, "Called onBatteryPercentageReceived; Battery percentage received!");
 
-        final TextView levelTextView = (TextView) findViewById(R.id.batteryLevelTextView);
+        final TextView levelTextView = findViewById(R.id.batteryLevelTextView);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -336,19 +345,19 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             int centerPixelIndex = width * (height / 2) + (width / 2);
 
             // Temperature Conversions
-            //Log.d(TAG, "Kelvin temperature of center pixel is " + thermalPixels[centerPixelIndex] / 100.0);
-            //Log.d(TAG, "Celsius temperature of center pixel is " + ((thermalPixels[centerPixelIndex] / 100.0) - 273.15));
-            //Log.d(TAG, "Fahrenheit temperature of center pixel is " + ((((thermalPixels[centerPixelIndex] / 100.0) - 273.15) * (9 / 5.0)) + 32.0));
+            /*Log.d(TAG, "Kelvin temperature of center pixel is " + thermalPixels[centerPixelIndex] / 100.0);
+            Log.d(TAG, "Celsius temperature of center pixel is " + ((thermalPixels[centerPixelIndex] / 100.0) - 273.15));
+            Log.d(TAG, "Fahrenheit temperature of center pixel is " + ((((thermalPixels[centerPixelIndex] / 100.0) - 273.15) * (9 / 5.0)) + 32.0));
 
             // The ARGB values will always be 255, 0, 0, 0 for thermal images
-            //int centerPixel = renderedImage.getBitmap().getPixel(width / 2, height / 2);
-            //int alpha = Color.alpha(centerPixel), red = Color.red(centerPixel), blue = Color.blue(centerPixel), green = Color.green(centerPixel);
+            int centerPixel = renderedImage.getBitmap().getPixel(width / 2, height / 2);
+            int alpha = Color.alpha(centerPixel), red = Color.red(centerPixel), blue = Color.blue(centerPixel), green = Color.green(centerPixel);
 
             // ARGB values
-            //Log.d(TAG, "Alpha: " + alpha + ", Red: " + red + ", Green: " + green + ", Blue: " + blue);
+            Log.d(TAG, "Alpha: " + alpha + ", Red: " + red + ", Green: " + green + ", Blue: " + blue);
 
 
-            //Log.d(TAG, "Temperature (" + thermalPixels[centerPixelIndex] + ") to RGB is " + temperatureToRGB(thermalPixels[centerPixelIndex]));
+            Log.d(TAG, "Temperature (" + thermalPixels[centerPixelIndex] + ") to RGB is " + temperatureToRGB(thermalPixels[centerPixelIndex]));*/
 
             int[] centerPixelIndexes = new int[] {
                     centerPixelIndex,
@@ -418,55 +427,87 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
             // Get RGB values
 
-            //int width = renderedImage.width();
-            //int height = renderedImage.height();
+            /*int width = renderedImage.width();
+            int height = renderedImage.height();
 
             // The RGB values will vary
-            //for (int i = 0; i < height / 100; ++i)
-            //{
-                //for (int j = 0; j < width / 100; ++j) {
-                    //int centerPixel = renderedImage.getBitmap().getPixel(width / 2, height / 2);
-                    //int centerPixel = renderedImage.getBitmap().getPixel(i, j);
-                    //int alpha = Color.alpha(centerPixel), red = Color.red(centerPixel), blue = Color.blue(centerPixel), green = Color.green(centerPixel);
+            for (int i = 0; i < height / 100; ++i)
+            {
+                for (int j = 0; j < width / 100; ++j) {
+                    int centerPixel = renderedImage.getBitmap().getPixel(width / 2, height / 2);
+                    int centerPixel = renderedImage.getBitmap().getPixel(i, j);
+                    int alpha = Color.alpha(centerPixel), red = Color.red(centerPixel), blue = Color.blue(centerPixel), green = Color.green(centerPixel);
 
-                    //Log.d(TAG, "Pixel value is " + centerPixel);
+                    Log.d(TAG, "Pixel value is " + centerPixel);
 
                     // ARGB values
-                    //Log.d(TAG, "Alpha: " + alpha + ", Red: " + red + ", Green: " + green + ", Blue: " + blue);
-                //}
-            //}
+                    Log.d(TAG, "Alpha: " + alpha + ", Red: " + red + ", Green: " + green + ", Blue: " + blue);
+                }
+            }*/
         }
-        /*
-        Capture this image if requested.
-        */
-        if (this.imageCaptureRequested) {
+
+        // Capture this image if requested
+        if (imageCaptureRequested) {
             imageCaptureRequested = false;
             new Thread(new Runnable() {
                 public void run() {
-                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
                     Log.d(TAG, "PATH is " + path);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ssZ", Locale.getDefault());
                     String formattedDate = sdf.format(new Date());
-                    String fileName = "FLIROne-" + formattedDate + ".jpg";
-                    try {
-                        lastSavedPath = path + "/" + fileName;
+                    String fileName = "FLIROne-" + formattedDate;
 
+                    //does the filename already exist? If so, name it slightly different until it's unique
+                    String uniqueName = path + "/" + fileName + ".jpg";
+                    File newFile = new File(uniqueName);
+                    int i = 0;
+                    while (newFile.exists()) {
+                        uniqueName = fileName + "(" + i + ")";
+                        newFile = new File(path, uniqueName + ".jpg");
+                        ++i;
+                    }
+
+                    //try to save the image
+                    try {
+                        lastSavedPath = uniqueName;
+                        //if permission is still needed to save the image, save the frame and then ask for permission
                         if (isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES))
                             lastFrame = renderedImage.getFrame();
 
                         //image will not be saved if asked for permission; save it in an instance variable and save it upon acceptance
-                        renderedImage.getFrame().save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                        renderedImage.getFrame().save(newFile, RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
 
                         MediaScannerConnection.scanFile(PreviewActivity.this,
-                                new String[]{ path + "/" + fileName }, null,
+                                new String[]{ newFile.getPath() }, null,
                                 new MediaScannerConnection.OnScanCompletedListener() {
                                     @Override
                                     public void onScanCompleted(String path, Uri uri) {
                                         Log.i("ExternalStorage", "Scanned " + path + ":");
                                         Log.i("ExternalStorage", "-> uri=" + uri);
+
+                                        //If file does not exist, skip writing location data to it
+                                        if (path == null || uri == null || LocationProvider.getInstance().getLocation() == null)
+                                            return;
+
+                                        try {
+                                            //Write the GPS location if Location permissions are accepted
+                                            Location current = LocationProvider.getInstance().getLocation();
+                                            double latitude = current.getLatitude(), longitude = current.getLongitude();
+
+                                            File image = new File(path);
+                                            Log.d(TAG, "PATH is " + path);
+                                            ExifInterface exif = new ExifInterface(image.getAbsolutePath());
+                                            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, GPS.convert(latitude));
+                                            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, GPS.latitudeRef(latitude));
+                                            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, GPS.convert(longitude));
+                                            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(longitude));
+                                            exif.saveAttributes();
+                                        }
+                                        catch (IOException e) {
+                                        // do something
+                                        Log.d(TAG, "IOException prevented saving location data to EXIF: " + e.getMessage());
+                                        }
                                     }
                                 });
-
                     }
                     catch (Exception e) {
                         Log.e(TAG, "Error saving image: " + e.getMessage());
@@ -634,7 +675,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * @param grantResults Stores whether or not permission has been granted
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         boolean somePermissionsForeverDenied = false;
         if (permissions.length >= 1) {
             boolean allPermissionsGranted = true;
@@ -664,6 +705,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 if (somePermissionsForeverDenied) {
                     //find out the permission that was denied and customize alert dialog
                     String action, category;
+
                     switch (requestCode) {
                         case MY_PERMISSIONS_REQUEST_READ_IMAGES:
                             action = "view captured images";
@@ -673,10 +715,15 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             action = "save captured images";
                             category = "Storage";
                             break;
+                        case MY_PERMISSIONS_REQUEST_LOCATION:
+                            action = "save where you take photos";
+                            category = "Location";
+                            break;
                         default:
                             action = "enable permissions again";
                             category = "the desired permission";
                     }
+
 
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                     alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
@@ -684,10 +731,27 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                                     "permissions in this app. To " + action + ", please " +
                                     "tap Settings, Permissions, and allow " + category + ".")
                             .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+
+                                String intentType;
+
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                            Uri.fromParts("package", getPackageName(), null));
+
+                                    switch (requestCode) {
+                                        case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                                            intentType = Settings.ACTION_INTERNAL_STORAGE_SETTINGS;
+                                            break;
+                                        case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
+                                            intentType = Settings.ACTION_INTERNAL_STORAGE_SETTINGS;
+                                            break;
+                                        case MY_PERMISSIONS_REQUEST_LOCATION:
+                                            intentType = Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
+                                            break;
+                                        default:
+                                            intentType = Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
+                                    }
+
+                                    Intent intent = new Intent(intentType, Uri.fromParts("package", getPackageName(), null));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     requestingPermission = false;
@@ -717,6 +781,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     if (lastFrame != null && lastSavedPath != null) {
                         try {
                             lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                            getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(lastSavedPath))));
                         }
                         catch (IOException e) {
                             Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
@@ -727,6 +792,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                         // accepted again in the app after the FLIR One device is re-detected
                         Log.w(TAG, "Permissions were accepted, but path or saved frame is null (frame could not be saved)");
                     }
+                }
+                else if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+                    LocationProvider.getInstance().initializeLocation((LocationManager) getSystemService(LOCATION_SERVICE));
                 }
                 // other 'else if' lines to check for other
                 // permissions this app might request
@@ -873,8 +941,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             ((ToggleButton) v).setChecked(false);
             return;
         }
-        ListView paletteListView = (ListView) findViewById(R.id.paletteListView);
-        ListView imageTypeListView = (ListView) findViewById(R.id.imageTypeListView);
+        ListView paletteListView = findViewById(R.id.paletteListView);
+        ListView imageTypeListView = findViewById(R.id.imageTypeListView);
         if (((ToggleButton) v).isChecked()) {
             // only show palette list if selected image type is colorized
             paletteListView.setVisibility(View.INVISIBLE);
@@ -1032,7 +1100,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
         SparseArray<String> imageTypeNames = new SparseArray<>();
         // Massage the type names for display purposes and skip any deprecated
-        for (Field field : RenderedImage.ImageType.class.getDeclaredFields()) {
+        for (Field field: RenderedImage.ImageType.class.getDeclaredFields()) {
             if (field.isEnumConstant() && !field.isAnnotationPresent(Deprecated.class)) {
                 RenderedImage.ImageType t = RenderedImage.ImageType.valueOf(field.getName());
                 String name = t.name().replaceAll("(RGBA)|(YCbCr)|(8)","").replaceAll("([a-z])([A-Z])", "$1 $2");
@@ -1049,7 +1117,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         frameProcessor = new FrameProcessor(this, this, EnumSet.of(defaultImageType,
                 RenderedImage.ImageType.ThermalRadiometricKelvinImage));
 
-        ListView imageTypeListView = ((ListView) findViewById(R.id.imageTypeListView));
+        ListView imageTypeListView = (findViewById(R.id.imageTypeListView));
         imageTypeListView.setAdapter(new ArrayAdapter<>(this, R.layout.emptytextview, imageTypeNameValues));
         imageTypeListView.setSelection(defaultImageType.ordinal());
         imageTypeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1070,7 +1138,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         imageTypeListView.setDivider(null);
 
         // Palette List View Setup
-        ListView paletteListView = ((ListView) findViewById(R.id.paletteListView));
+        ListView paletteListView = (findViewById(R.id.paletteListView));
         paletteListView.setDivider(null);
         paletteListView.setAdapter(new ArrayAdapter<>(this, R.layout.emptytextview, RenderedImage.Palette.values()));
         paletteListView.setSelection(frameProcessor.getImagePalette().ordinal());
@@ -1180,14 +1248,145 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 return true;
             }
         });
+
+        //Verify if GPS is on to enable Location permission
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        //Get sensor for quaternion data
+        if (sensorHelper == null) {
+            Log.d(TAG, "Will add sensor now...");
+
+            sensorHelper = new SensorHelper(this);
+            sensorHelper.setOnShakeListener(new SensorHelper.OnShakeListener() {
+
+                @Override
+                public void onAngleUpdate() {
+                    //Log.d(TAG, "Shake detected.");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(TAG, "Shake detected!");
+                            //display a toast saying to move up, down, left, or right more, based on angles
+
+                        }
+                    }).start();
+                }
+            });
+            Log.d(TAG, "Sensor is: " + sensorHelper);
+        }
+
+        // check if enabled and if not send user to the GPS settings
+        // Better solution would be to display a dialog and suggesting to
+        // go to the settings
+        if (!enabled) {
+            requestingPermission = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                    alert.setTitle("Please Turn on GPS");
+                    alert.setMessage("In order to track where images are taken, first enable " +
+                            "the GPS setting and then enable the Location permission for this app.");
+                    alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    });
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                            requestingPermission = false;
+                        }
+                    });
+                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            requestingPermission = false;
+                        }
+                    });
+                    alert.show();
+                }
+            });
+        }
+
+        //If we are opening the app freshly, request location permissions with an explanation.
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestingPermission = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                    alert.setTitle("Please Grant Location Permission");
+                    alert.setMessage("In order to track where images are taken, " +
+                            "please enable location permissions.");
+                    alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    });
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            ActivityCompat.requestPermissions(PreviewActivity.this,
+                                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
+                                    MY_PERMISSIONS_REQUEST_LOCATION);
+                        }
+                    });
+                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            requestingPermission = false;
+                        }
+                    });
+                    alert.show();
+                }
+            });
+        }
+
+        //Attempt to record where photos are taken for later processing
+        /*LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        // check if enabled and if not send user to the GPS settings
+        // Better solution would be to display a dialog and suggesting to
+        // go to the settings
+        if (!enabled) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Please Grant Storage Permission");
+            alert.setMessage("In order to view saved images, "
+                    + "please allow this app to access storage first.");
+            alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    requestingPermission = false;
+                    finish();
+                }
+            });
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    ActivityCompat.requestPermissions(PreviewActivity.this,
+                            new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
+                            MY_PERMISSIONS_REQUEST_LOCATION);
+                }
+            });
+            alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    requestingPermission = false;
+                    finish();
+                }
+            });
+            alert.show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }*/
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "Called onStart");
-        thermalImageView = (ImageView) findViewById(R.id.imageView);
-        if (Device.getSupportedDeviceClasses(this).contains(FlirUsbDevice.class)){
+        thermalImageView = findViewById(R.id.imageView);
+        if (Device.getSupportedDeviceClasses(this).contains(FlirUsbDevice.class)) {
             findViewById(R.id.pleaseConnect).setVisibility(View.VISIBLE);
         }
         try {
@@ -1205,6 +1404,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             // wait for user to follow the instructions;
             finish();
         }
+
+        LocationProvider.getInstance().initializeLocation((LocationManager) getSystemService(LOCATION_SERVICE));
     }
 
     @Override
@@ -1214,15 +1415,21 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         if (flirOneDevice != null) {
             flirOneDevice.startFrameStream(this);
         }
+        LocationProvider.getInstance().requestUpdates();
+
+        sensorHelper.requestUpdates();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "Called onPause");
+        LocationProvider.getInstance().stopUpdates();
         if (flirOneDevice != null) {
             flirOneDevice.stopFrameStream();
         }
+
+        sensorHelper.stopUpdates();
     }
 
     @Override

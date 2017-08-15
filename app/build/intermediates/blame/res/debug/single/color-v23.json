@@ -1,42 +1,42 @@
 [
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_btn_checkable.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_btn_checkable.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_btn_checkable.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_edittext.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_edittext.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_edittext.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/design_tint_password_toggle.xml",
-        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/color-v23/design_tint_password_toggle.xml"
+        "source": "/Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/res/color-v23/design_tint_password_toggle.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_spinner.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_spinner.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_spinner.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_default.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_default.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_default.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_switch_track.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_switch_track.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_switch_track.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_btn_colored_text_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_btn_colored_text_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_btn_colored_text_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_tint_seek_thumb.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_tint_seek_thumb.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_tint_seek_thumb.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_btn_colored_borderless_text_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_btn_colored_borderless_text_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_btn_colored_borderless_text_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/color-v23/abc_color_highlight_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/color-v23/abc_color_highlight_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/color-v23/abc_color_highlight_material.xml"
     }
 ]

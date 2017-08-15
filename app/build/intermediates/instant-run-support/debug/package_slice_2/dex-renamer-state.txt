@@ -1,4 +1,4 @@
-#Wed Jul 12 12:40:55 EDT 2017
+#Tue Aug 15 15:27:35 EDT 2017
 base.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_2
 renamed.0=classes.dex
 file.0=/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_2/classes.dex

@@ -96,12 +96,12 @@ public class EditorActivity extends Activity {
             super.onCreate(savedInstanceState);
 
             setContentView(R.layout.activity_editor);
-            imageView = (ImageView) findViewById(R.id.imageView);
+            imageView = findViewById(R.id.imageView);
 
             Intent intent = getIntent();
             String path;
             Uri data = intent.getData();
-            if (data == null){
+            if (data == null) {
                 // TODO: handle a "share" intent
 
             }
@@ -121,7 +121,6 @@ public class EditorActivity extends Activity {
                     return;
                 }
 
-
                 Log.d(LOG_TAG, "loaded frame: " + frame);
                 final Context context = this.getApplicationContext();
                 new Thread(new Runnable() {
@@ -135,17 +134,17 @@ public class EditorActivity extends Activity {
                 }).start();
             }
         }
-    public void onImageClick(View v) {
-        if (msxRenderedImage != null) {
-            RenderedImage.Palette currentPalette = msxRenderedImage.palette();
-            RenderedImage.Palette[] palettes = RenderedImage.Palette.values();
-            int nextPaletteOrdinal = (currentPalette.ordinal() + 1) % palettes.length;
-            frameProcessor.setImagePalette(palettes[nextPaletteOrdinal]);
-            renderedImageMap = frameProcessor.getProcessedFrames(new LoadedFrame(frameFile));
-            msxRenderedImage = renderedImageMap.get(RenderedImage.ImageType.BlendedMSXRGBA8888Image);
 
-            thermalBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(msxRenderedImage.pixelData()));
-            ((ImageView) findViewById(R.id.editorImageView)).setImageBitmap(thermalBitmap);
+        public void onImageClick(View v) {
+            if (msxRenderedImage != null) {
+                RenderedImage.Palette currentPalette = msxRenderedImage.palette();
+                RenderedImage.Palette[] palettes = RenderedImage.Palette.values();
+                int nextPaletteOrdinal = (currentPalette.ordinal() + 1) % palettes.length;
+                frameProcessor.setImagePalette(palettes[nextPaletteOrdinal]);
+                renderedImageMap = frameProcessor.getProcessedFrames(new LoadedFrame(frameFile));
+                msxRenderedImage = renderedImageMap.get(RenderedImage.ImageType.BlendedMSXRGBA8888Image);
+                thermalBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(msxRenderedImage.pixelData()));
+                ((ImageView) findViewById(R.id.editorImageView)).setImageBitmap(thermalBitmap);
+            }
         }
-    }
 }

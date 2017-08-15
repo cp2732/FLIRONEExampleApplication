@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public class Image implements Serializable {
     private String name, path;
-    private Bitmap small, medium, large;
     private String timestamp;
+    private transient Bitmap bmp; //"transient" is needed because Bitmap is not serializable (will cause NotSerializableException)
 
     public Image() { }
 
@@ -20,12 +20,10 @@ public class Image implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public Image(String name, String path, Bitmap small, Bitmap medium, Bitmap large, String timestamp) {
+    public Image(String name, String path, Bitmap bmp, String timestamp) {
         this.name = name;
         this.path = path;
-        this.small = small;
-        this.medium = medium;
-        this.large = large;
+        this.bmp = bmp;
         this.timestamp = timestamp;
     }
 
@@ -45,26 +43,12 @@ public class Image implements Serializable {
         this.path = path;
     }
 
-    public Bitmap getSmall() {
-        return small;
+    public Bitmap getBitmap() {
+        return bmp;
     }
 
-    public void setSmall(Bitmap small) {
-        this.small = small;
-    }
-
-    public Bitmap getMedium() { return medium; }
-
-    public void setMedium(Bitmap medium) {
-        this.medium = medium;
-    }
-
-    public Bitmap getLarge() {
-        return large;
-    }
-
-    public void setLarge(Bitmap large) {
-        this.large = large;
+    public void setBitmap(Bitmap bmp) {
+        this.bmp = bmp;
     }
 
     public String getTimestamp() {

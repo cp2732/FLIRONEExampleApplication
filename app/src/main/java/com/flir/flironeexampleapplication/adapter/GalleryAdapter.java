@@ -33,7 +33,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
         public MyViewHolder(View view) {
             super(view);
             //Log.d(TAG, "Called MyViewHolder");
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            thumbnail = view.findViewById(R.id.thumbnail);
         }
     }
 

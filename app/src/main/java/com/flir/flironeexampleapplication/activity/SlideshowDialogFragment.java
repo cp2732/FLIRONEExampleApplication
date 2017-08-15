@@ -2,11 +2,17 @@ package com.flir.flironeexampleapplication.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,24 +21,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.flir.flironeexampleapplication.R;
 import com.flir.flironeexampleapplication.model.Image;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Initially created by FLIR for an example app for the FLIR One.
  * Extended for FLIR One camera support by Chris Puda on 06/22/2017.
  */
 public class SlideshowDialogFragment extends DialogFragment {
-    private static String TAG = SlideshowDialogFragment.class.getSimpleName();
+    public static String TAG = SlideshowDialogFragment.class.getSimpleName();
     private GalleryActivity galleryActivity;
     private ArrayList<Image> images;
     private ViewPager viewPager;
-    private TextView lblCount, lblTitle, lblDate;
+    private TextView lblCount;
     private int selectedPosition = 0;
+
+    @BindView(R.id.slideshow_toolbar)
+    Toolbar toolbar;
 
     static SlideshowDialogFragment newInstance() {
         //Log.d(TAG, "Called newInstance");
@@ -55,38 +65,30 @@ public class SlideshowDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Called onCreate");
 
-        /*ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            Log.d(TAG, "getActivity is " + getActivity().toString());
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) getActivity().findViewById(R.id.toolbar));
-            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
+
+        /*if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.X_icon);
         }
         else
-            Log.d(TAG, "getActivity is null");*/
+            Log.e(TAG, "Toolbar is NULL!");
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
 
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-
-        /*((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) getActivity().findViewById(R.id.toolbar));
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }*/
+        //setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Log.d(TAG, "Called onCreateView");
         View v = inflater.inflate(R.layout.fragment_image_slider, container, false);
-        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-        lblCount = (TextView) v.findViewById(R.id.lbl_count);
-        lblTitle = (TextView) v.findViewById(R.id.title);
-        lblDate = (TextView) v.findViewById(R.id.date);
+        viewPager = v.findViewById(R.id.viewpager);
+        lblCount = v.findViewById(R.id.lbl_count);
 
         // workaround to unchecked cast
         images = new ArrayList<>();
@@ -110,16 +112,48 @@ public class SlideshowDialogFragment extends DialogFragment {
 
         setCurrentItem(selectedPosition);
 
-        setHasOptionsMenu(true);
-
         return v;
     }
 
     @Override
-    public void onStop() {
-        //Log.d(TAG, "Called onStop");
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.i(TAG, "onViewCreated(): " + savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
-        super.onStop();
+        setHasOptionsMenu(true);
+        toolbar.setTitle("IR Slideshow Gallery");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void onResume() {
+        getActivity().invalidateOptionsMenu();
+        super.onResume();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.e(TAG, "onCreateOptionsMenu()");
+        menu.clear();
+        if (getChildFragmentManager().getBackStackEntryCount() == 0) {
+            inflater.inflate(R.menu.slideshow_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "Called onOptionsItemSelected");
+        // handle X button click here
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.close_slideshow:
+                Log.d(TAG, "Pressed X Button!");
+                onBackPressed();
+                break;
+            default: return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     @Override
@@ -132,6 +166,10 @@ public class SlideshowDialogFragment extends DialogFragment {
         super.onDestroy();
     }
 
+    public boolean onBackPressed() {
+        Log.d(TAG, "Called onBackPressed");
+        return getChildFragmentManager().popBackStackImmediate();
+    }
 
     private void setCurrentItem(int position) {
         //Log.d(TAG, "Called setCurrentItem");
@@ -162,17 +200,9 @@ public class SlideshowDialogFragment extends DialogFragment {
     private void displayMetaInfo(int position) {
         //Log.d(TAG, "Called displayMetaInfo");
         Image image = images.get(position);
-        File file = new File(image.getPath());
-        Date lastModDate = new Date(file.lastModified());
 
-        //Displays the number the image is in the collection (ex: 1 of 10)
+        //Displays the number the image is in the collection (# of #)
         lblCount.setText((position + 1) + " of " + images.size());
-
-        //Displays the filename of the image
-        lblTitle.setText(image.getName());
-
-        //Displays the last modified date of the image
-        lblDate.setText(lastModDate.toString());
     }
 
     //adapter
@@ -181,7 +211,7 @@ public class SlideshowDialogFragment extends DialogFragment {
         private LayoutInflater layoutInflater;
 
         public MyViewPagerAdapter() {
-            Log.d(TAG, "Called MyViewPagerAdapter Constructor");
+            //Log.d(TAG, "Called MyViewPagerAdapter Constructor");
         }
 
         @Override
@@ -190,7 +220,7 @@ public class SlideshowDialogFragment extends DialogFragment {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.image_fullscreen_preview, container, false);
 
-            ImageView imageViewPreview = (ImageView) view.findViewById(R.id.image_preview);
+            ImageView imageViewPreview = view.findViewById(R.id.image_preview);
 
             Image image = images.get(position);
 
@@ -214,7 +244,7 @@ public class SlideshowDialogFragment extends DialogFragment {
         @Override
         public boolean isViewFromObject(View view, Object obj) {
             //Log.d(TAG, "Called isViewFromObject");
-            return view == ((View) obj);
+            return view == obj;
         }
 
         @Override

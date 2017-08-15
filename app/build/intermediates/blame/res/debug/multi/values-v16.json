@@ -11,7 +11,7 @@
                     "endOffset": 116
                 },
                 "from": {
-                    "file": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/values-v16/values-v16.xml",
+                    "file": "/Users/cp2732/.android/build-cache/a0c1044df27679dad22ae343771aada2f6be2cfb/output/res/values-v16/values-v16.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -31,14 +31,14 @@
                     "endOffset": 289
                 },
                 "from": {
-                    "file": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/values-v16/values-v16.xml",
+                    "file": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/values-v16/values-v16.xml",
                     "position": {
-                        "startLine": 3,
+                        "startLine": 2,
                         "startColumn": 4,
-                        "startOffset": 121,
-                        "endLine": 6,
+                        "startOffset": 55,
+                        "endLine": 5,
                         "endColumn": 12,
-                        "endOffset": 289
+                        "endOffset": 223
                     }
                 }
             }

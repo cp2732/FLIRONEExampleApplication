@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:2:1-56:12
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:2:1-69:12
 	package
 		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:4:5-49
 		INJECTED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml
@@ -21,137 +21,174 @@ uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
 ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:6:5-80
 	android:name
 		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:6:22-78
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:7:5-78
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:7:22-76
+uses-permission#android.permission.MANAGE_DOCUMENTS
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:8:5-74
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:8:22-72
 uses-permission#android.permission.INTERNET
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:7:5-66
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:9:5-66
 MERGED from [:flironesdk:] /Users/cp2732/.android/build-cache/0a172db449b4f4f32e545f184ef9906e71bd1e0e/output/AndroidManifest.xml:12:5-67
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:7:22-64
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:9:22-64
 application
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:8:5-55:19
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:10:5-68:19
 MERGED from [:flironesdk:] /Users/cp2732/.android/build-cache/0a172db449b4f4f32e545f184ef9906e71bd1e0e/output/AndroidManifest.xml:14:5-17:19
-MERGED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:appcompat-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:animated-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/2ee6f1dcfa54473f05219fdc98b7456878d68c8f/output/AndroidManifest.xml:22:5-26:19
-MERGED from [com.android.support:support-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/ac8b03736f0b6ea0ac546ed9679ca47a21df6d67/output/AndroidManifest.xml:22:5-26:19
-MERGED from [com.android.support:transition:26.0.0-beta2] /Users/cp2732/.android/build-cache/20d21062fedfc5e2761e81a1424ef6621bdb37ff/output/AndroidManifest.xml:22:5-26:19
-MERGED from [com.android.support:support-v4:26.0.0-beta2] /Users/cp2732/.android/build-cache/b1362eafc82f8ff066d2ce8ae8b474bc0dda3499/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:support-media-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/08d004f41b7442b960dea8411c49caebfa2b84aa/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:support-fragment:26.0.0-beta2] /Users/cp2732/.android/build-cache/7d65e995445973079bdbb2c1691d9fe3eef7e720/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:support-core-utils:26.0.0-beta2] /Users/cp2732/.android/build-cache/040f1ded570e1899473640b6d8fac13bb0fa7ec2/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:recyclerview-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/981122cc79b07917ff7bd796090047cdae818f8b/output/AndroidManifest.xml:22:5-26:19
-MERGED from [com.android.support:support-core-ui:26.0.0-beta2] /Users/cp2732/.android/build-cache/3c39951cf80ecdef5355b5cb577412b6a342e200/output/AndroidManifest.xml:25:5-29:19
-MERGED from [com.android.support:support-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/938e422754b379adfda9b7a2367aa87632216a40/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:exifinterface:26.0.1] /Users/cp2732/.android/build-cache/481edba5401f766582a217ce3e42b672dc850e5d/output/AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:design:26.0.1] /Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:appcompat-v7:26.0.1] /Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:animated-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/6d6393f5535932433f8d3ecdf52ce6a7fe24b410/output/AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/9b7926ea252e087ab7e0bd2cc99a07cd2609d50e/output/AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:transition:26.0.1] /Users/cp2732/.android/build-cache/8701d0d369f572b036c238e1fedd1327cd364331/output/AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:recyclerview-v7:26.0.1] /Users/cp2732/.android/build-cache/7d9b9342795a3ac14e871b8771a491cd44d5afea/output/AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-location:11.0.4] /Users/cp2732/.android/build-cache/5d65c0dea4f7f6b91237c9f6303862be4dca99c9/output/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:18:5-20:19
+MERGED from [com.google.android.gms:play-services-tasks:11.0.4] /Users/cp2732/.android/build-cache/24811e630de9874122d7c3ec6f49e24961a842a3/output/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-basement:11.0.4] /Users/cp2732/.android/build-cache/1a1989e8d6929ca327e3c994ef005bb9a378e2c4/output/AndroidManifest.xml:19:5-21:19
+MERGED from [com.android.support:support-v4:26.0.1] /Users/cp2732/.android/build-cache/4ff47ba3f08c6cee6e71ca32bc19b5c5408f2b3a/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-media-compat:26.0.1] /Users/cp2732/.android/build-cache/e24fb0ba0def886b5f042d35bb50edad130b6296/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-fragment:26.0.1] /Users/cp2732/.android/build-cache/68690c2616e4a05c4e80ddc344c1191a61684663/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-ui:26.0.1] /Users/cp2732/.android/build-cache/bbab8f72b23b20721e16d02814d0163eb59f1609/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-core-utils:26.0.1] /Users/cp2732/.android/build-cache/e978dab04df75e2f2cee6627f2645a527f2987dd/output/AndroidManifest.xml:25:5-29:19
+MERGED from [com.android.support:support-compat:26.0.1] /Users/cp2732/.android/build-cache/a0c1044df27679dad22ae343771aada2f6be2cfb/output/AndroidManifest.xml:25:5-29:19
 	android:label
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:11:9-41
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:13:9-41
 	android:supportsRtl
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:13:9-35
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:15:9-35
 	android:versionName
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:15:9-34
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:17:9-34
 	android:versionCode
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:14:9-32
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:16:9-32
 	android:allowBackup
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:9:9-35
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:11:9-35
 	android:icon
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:10:9-43
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:12:9-43
 	android:theme
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:12:9-40
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:14:9-40
 activity#com.flir.flironeexampleapplication.activity.PreviewActivity
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:16:9-35:20
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:18:9-37:20
 	android:screenOrientation
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:18:13-49
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:20:13-49
 	android:label
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:20:13-50
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:22:13-50
 	android:launchMode
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:22:13-44
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:24:13-44
 	android:configChanges
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:19:13-74
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:21:13-74
 	android:theme
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:21:13-51
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:23:13-51
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:17:13-53
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:19:13-53
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:23:13-26:29
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:25:13-28:29
 action#android.intent.action.MAIN
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:24:17-69
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:26:17-69
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:24:25-66
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:25:17-77
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:27:17-77
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:25:27-74
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:27:27-74
 intent-filter#android.hardware.usb.action.USB_DEVICE_ATTACHED+android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:27:13-31:29
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:29:13-33:29
 action#android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:29:17-90
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:31:17-90
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:29:25-87
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:31:25-87
 meta-data#android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:32:13-34:57
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:34:13-36:57
 	android:resource
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:34:17-54
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:36:17-54
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:33:17-79
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:35:17-79
 activity#com.flir.flironeexampleapplication.activity.EditorActivity
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:36:9-39:20
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:38:9-41:20
 	android:screenOrientation
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:38:13-49
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:40:13-49
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:37:13-52
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:39:13-52
 activity#com.flir.flironeexampleapplication.activity.GalleryActivity
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:40:9-54:20
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:42:9-56:20
 	android:label
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:43:13-53
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:45:13-53
 	android:launchMode
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:45:13-44
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:47:13-44
 	android:configChanges
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:42:13-74
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:44:13-74
 	android:theme
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:44:13-45
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:46:13-45
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:41:13-53
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:43:13-53
 intent-filter#android.intent.action.EDIT+android.intent.action.PICK+android.intent.action.SEND+android.intent.action.VIEW+android.intent.category.DEFAULT
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:46:13-53:29
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:48:13-55:29
 action#android.intent.action.VIEW
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:47:17-69
-	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:47:25-66
-action#android.intent.action.EDIT
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:48:17-69
-	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:48:25-66
-action#android.intent.action.PICK
 ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:49:17-69
 	android:name
 		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:49:25-66
-action#android.intent.action.SEND
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:50:17-68
+action#android.intent.action.EDIT
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:50:17-69
 	android:name
 		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:50:25-66
-category#android.intent.category.DEFAULT
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:51:17-76
+action#android.intent.action.PICK
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:51:17-69
 	android:name
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:51:27-73
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:51:25-66
+action#android.intent.action.SEND
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:52:17-68
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:52:25-66
+category#android.intent.category.DEFAULT
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:53:17-76
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:53:27-73
 data
-ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:52:17-52
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:54:17-52
 	android:mimeType
-		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:52:23-49
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:54:23-49
+provider#android.support.v4.content.FileProvider
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:59:9-67:20
+	android:authorities
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:61:13-69
+	android:grantUriPermissions
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:63:13-47
+	android:exported
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:62:13-37
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:60:13-67
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:64:13-66:54
+	android:resource
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:66:17-51
+	android:name
+		ADDED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml:65:17-67
 uses-sdk
 INJECTED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [:flironesdk:] /Users/cp2732/.android/build-cache/0a172db449b4f4f32e545f184ef9906e71bd1e0e/output/AndroidManifest.xml:7:5-9:41
-MERGED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:21:5-23:62
-MERGED from [com.android.support:appcompat-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/AndroidManifest.xml:21:5-23:78
-MERGED from [com.android.support:animated-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/2ee6f1dcfa54473f05219fdc98b7456878d68c8f/output/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/ac8b03736f0b6ea0ac546ed9679ca47a21df6d67/output/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:transition:26.0.0-beta2] /Users/cp2732/.android/build-cache/20d21062fedfc5e2761e81a1424ef6621bdb37ff/output/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:26.0.0-beta2] /Users/cp2732/.android/build-cache/b1362eafc82f8ff066d2ce8ae8b474bc0dda3499/output/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-media-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/08d004f41b7442b960dea8411c49caebfa2b84aa/output/AndroidManifest.xml:21:5-23:63
-MERGED from [com.android.support:support-fragment:26.0.0-beta2] /Users/cp2732/.android/build-cache/7d65e995445973079bdbb2c1691d9fe3eef7e720/output/AndroidManifest.xml:21:5-23:60
-MERGED from [com.android.support:support-core-utils:26.0.0-beta2] /Users/cp2732/.android/build-cache/040f1ded570e1899473640b6d8fac13bb0fa7ec2/output/AndroidManifest.xml:21:5-23:61
-MERGED from [com.android.support:recyclerview-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/981122cc79b07917ff7bd796090047cdae818f8b/output/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:26.0.0-beta2] /Users/cp2732/.android/build-cache/3c39951cf80ecdef5355b5cb577412b6a342e200/output/AndroidManifest.xml:21:5-23:58
-MERGED from [com.android.support:support-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/938e422754b379adfda9b7a2367aa87632216a40/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:21:5-23:55
+MERGED from [com.android.support:exifinterface:26.0.1] /Users/cp2732/.android/build-cache/481edba5401f766582a217ce3e42b672dc850e5d/output/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:26.0.1] /Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:26.0.1] /Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/6d6393f5535932433f8d3ecdf52ce6a7fe24b410/output/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/9b7926ea252e087ab7e0bd2cc99a07cd2609d50e/output/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:26.0.1] /Users/cp2732/.android/build-cache/8701d0d369f572b036c238e1fedd1327cd364331/output/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:26.0.1] /Users/cp2732/.android/build-cache/7d9b9342795a3ac14e871b8771a491cd44d5afea/output/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-location:11.0.4] /Users/cp2732/.android/build-cache/5d65c0dea4f7f6b91237c9f6303862be4dca99c9/output/AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:17:5-43
+MERGED from [com.google.android.gms:play-services-tasks:11.0.4] /Users/cp2732/.android/build-cache/24811e630de9874122d7c3ec6f49e24961a842a3/output/AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-basement:11.0.4] /Users/cp2732/.android/build-cache/1a1989e8d6929ca327e3c994ef005bb9a378e2c4/output/AndroidManifest.xml:17:5-43
+MERGED from [com.android.support:support-v4:26.0.1] /Users/cp2732/.android/build-cache/4ff47ba3f08c6cee6e71ca32bc19b5c5408f2b3a/output/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-media-compat:26.0.1] /Users/cp2732/.android/build-cache/e24fb0ba0def886b5f042d35bb50edad130b6296/output/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-fragment:26.0.1] /Users/cp2732/.android/build-cache/68690c2616e4a05c4e80ddc344c1191a61684663/output/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-core-ui:26.0.1] /Users/cp2732/.android/build-cache/bbab8f72b23b20721e16d02814d0163eb59f1609/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:26.0.1] /Users/cp2732/.android/build-cache/e978dab04df75e2f2cee6627f2645a527f2987dd/output/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:26.0.1] /Users/cp2732/.android/build-cache/a0c1044df27679dad22ae343771aada2f6be2cfb/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.jakewharton:butterknife:8.0.1] /Users/cp2732/.android/build-cache/7be17045596cd628fcd214db36283d6b16e00acd/output/AndroidManifest.xml:5:5-43
 	tools:overrideLibrary
-		ADDED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:23:9-59
+		ADDED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:23:9-52
 	android:targetSdkVersion
 		INJECTED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/src/main/AndroidManifest.xml
@@ -163,19 +200,35 @@ ADDED from [:flironesdk:] /Users/cp2732/.android/build-cache/0a172db449b4f4f32e5
 	android:name
 		ADDED from [:flironesdk:] /Users/cp2732/.android/build-cache/0a172db449b4f4f32e545f184ef9906e71bd1e0e/output/AndroidManifest.xml:11:22-62
 meta-data#android.support.VERSION
-ADDED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:appcompat-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:animated-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/2ee6f1dcfa54473f05219fdc98b7456878d68c8f/output/AndroidManifest.xml:23:9-25:44
-MERGED from [com.android.support:support-vector-drawable:26.0.0-beta2] /Users/cp2732/.android/build-cache/ac8b03736f0b6ea0ac546ed9679ca47a21df6d67/output/AndroidManifest.xml:23:9-25:44
-MERGED from [com.android.support:transition:26.0.0-beta2] /Users/cp2732/.android/build-cache/20d21062fedfc5e2761e81a1424ef6621bdb37ff/output/AndroidManifest.xml:23:9-25:44
-MERGED from [com.android.support:support-v4:26.0.0-beta2] /Users/cp2732/.android/build-cache/b1362eafc82f8ff066d2ce8ae8b474bc0dda3499/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:support-media-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/08d004f41b7442b960dea8411c49caebfa2b84aa/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:support-fragment:26.0.0-beta2] /Users/cp2732/.android/build-cache/7d65e995445973079bdbb2c1691d9fe3eef7e720/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:support-core-utils:26.0.0-beta2] /Users/cp2732/.android/build-cache/040f1ded570e1899473640b6d8fac13bb0fa7ec2/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:recyclerview-v7:26.0.0-beta2] /Users/cp2732/.android/build-cache/981122cc79b07917ff7bd796090047cdae818f8b/output/AndroidManifest.xml:23:9-25:44
-MERGED from [com.android.support:support-core-ui:26.0.0-beta2] /Users/cp2732/.android/build-cache/3c39951cf80ecdef5355b5cb577412b6a342e200/output/AndroidManifest.xml:26:9-28:44
-MERGED from [com.android.support:support-compat:26.0.0-beta2] /Users/cp2732/.android/build-cache/938e422754b379adfda9b7a2367aa87632216a40/output/AndroidManifest.xml:26:9-28:44
+ADDED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:exifinterface:26.0.1] /Users/cp2732/.android/build-cache/481edba5401f766582a217ce3e42b672dc850e5d/output/AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:design:26.0.1] /Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:appcompat-v7:26.0.1] /Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:animated-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/6d6393f5535932433f8d3ecdf52ce6a7fe24b410/output/AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-vector-drawable:26.0.1] /Users/cp2732/.android/build-cache/9b7926ea252e087ab7e0bd2cc99a07cd2609d50e/output/AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:transition:26.0.1] /Users/cp2732/.android/build-cache/8701d0d369f572b036c238e1fedd1327cd364331/output/AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:recyclerview-v7:26.0.1] /Users/cp2732/.android/build-cache/7d9b9342795a3ac14e871b8771a491cd44d5afea/output/AndroidManifest.xml:23:9-25:38
+MERGED from [com.android.support:support-v4:26.0.1] /Users/cp2732/.android/build-cache/4ff47ba3f08c6cee6e71ca32bc19b5c5408f2b3a/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-media-compat:26.0.1] /Users/cp2732/.android/build-cache/e24fb0ba0def886b5f042d35bb50edad130b6296/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-fragment:26.0.1] /Users/cp2732/.android/build-cache/68690c2616e4a05c4e80ddc344c1191a61684663/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-ui:26.0.1] /Users/cp2732/.android/build-cache/bbab8f72b23b20721e16d02814d0163eb59f1609/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-core-utils:26.0.1] /Users/cp2732/.android/build-cache/e978dab04df75e2f2cee6627f2645a527f2987dd/output/AndroidManifest.xml:26:9-28:38
+MERGED from [com.android.support:support-compat:26.0.1] /Users/cp2732/.android/build-cache/a0c1044df27679dad22ae343771aada2f6be2cfb/output/AndroidManifest.xml:26:9-28:38
 	android:value
-		ADDED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:28:13-41
+		ADDED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:28:13-35
 	android:name
-		ADDED from [com.android.support:design:26.0.0-beta2] /Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/AndroidManifest.xml:27:13-51
+		ADDED from [com.android.support:support-v13:26.0.1] /Users/cp2732/.android/build-cache/9acd7bff525ff9ea7deb958753e561f9b0ad671f/output/AndroidManifest.xml:27:13-51
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:19:9-172
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:19:146-170
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:19:86-145
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:11.0.4] /Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/AndroidManifest.xml:19:19-85
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:11.0.4] /Users/cp2732/.android/build-cache/1a1989e8d6929ca327e3c994ef005bb9a378e2c4/output/AndroidManifest.xml:20:9-121
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:11.0.4] /Users/cp2732/.android/build-cache/1a1989e8d6929ca327e3c994ef005bb9a378e2c4/output/AndroidManifest.xml:20:66-119
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:11.0.4] /Users/cp2732/.android/build-cache/1a1989e8d6929ca327e3c994ef005bb9a378e2c4/output/AndroidManifest.xml:20:20-65

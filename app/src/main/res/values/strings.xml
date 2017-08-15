@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">IR Street View</string>
     <string name="main_app_name">IR Street View</string>
-    <string name="gallery_app_name">IR Street View Gallery</string>
+    <string name="gallery_app_name">IR Gallery</string>
     <string name="connect_warning">Please Connect FLIR One</string>
     <string name="change_view">Change View \u21EA</string>
     <string name="change_view_retract">Change View \u21B2</string>
@@ -21,6 +21,15 @@
     <string name="live_footage_desc">Live camera footage</string>
     <string name="gallery_desc">View the photo gallery</string>
     <string name="fullscreen_image_desc">A fullscreen image</string>
-    <string name="small_image_desc">An image in the gallery</string>
+    <string name="small_image_desc">A thumbnail in the gallery</string>
     <string name="camera_reticle_desc">The Spot Meter</string>
+
+    <!-- Toolbar Menu Options -->
+    <string name="menu_close">Close Window</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_info">App Information</string>
+    <string name="menu_add">Import Image</string>
+    <string name="menu_edit">Edit Image</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_delete">Delete Image</string>
 </resources>

@@ -1,34 +1,34 @@
 [
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/abc_action_bar_item_background_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/drawable-v21/abc_action_bar_item_background_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable-v21/abc_action_bar_item_background_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/design_password_eye.xml",
-        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/drawable-v21/design_password_eye.xml"
+        "source": "/Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/res/drawable-v21/design_password_eye.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/avd_hide_password.xml",
-        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/drawable-v21/avd_hide_password.xml"
+        "source": "/Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/res/drawable-v21/avd_hide_password.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/abc_btn_colored_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/drawable-v21/abc_btn_colored_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable-v21/abc_btn_colored_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/design_bottom_navigation_item_background.xml",
-        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/drawable-v21/design_bottom_navigation_item_background.xml"
+        "source": "/Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/res/drawable-v21/design_bottom_navigation_item_background.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/notification_action_background.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/drawable-v21/notification_action_background.xml"
+        "source": "/Users/cp2732/.android/build-cache/a0c1044df27679dad22ae343771aada2f6be2cfb/output/res/drawable-v21/notification_action_background.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/abc_edit_text_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/355acdd37ddf0265f06d8bf6d4818529d6811164/output/res/drawable-v21/abc_edit_text_material.xml"
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable-v21/abc_edit_text_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable-v21/avd_show_password.xml",
-        "source": "/Users/cp2732/.android/build-cache/3e43780d105de0e5ff126680ac448820243d67f3/output/res/drawable-v21/avd_show_password.xml"
+        "source": "/Users/cp2732/.android/build-cache/848e1735ad2f312b37517982d155014386f4d2b3/output/res/drawable-v21/avd_show_password.xml"
     }
 ]

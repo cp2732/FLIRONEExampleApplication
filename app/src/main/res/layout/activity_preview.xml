@@ -1,7 +1,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/topView"
+    android:id="@+id/camera_preview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_dark"
@@ -149,7 +149,7 @@
                 android:layout_gravity="start|bottom"
                 android:contentDescription="@string/gallery_desc"
                 android:onClick="onOpenGalleryClicked"
-                android:src="@drawable/ic_menu_gallery"
+                android:src="@drawable/gallery"
                 android:adjustViewBounds="true"
                 android:maxWidth="52dp"
                 android:maxHeight="52dp"
@@ -171,7 +171,7 @@
                 android:layout_gravity="center_horizontal|bottom"
                 android:contentDescription="@string/camera_icon_desc"
                 android:onClick="onCaptureImageClicked"
-                android:src="@drawable/ic_menu_camera"
+                android:src="@drawable/camera"
                 android:adjustViewBounds="true"
                 android:maxWidth="52dp"
                 android:maxHeight="52dp"
@@ -224,7 +224,7 @@
         android:maxWidth="32dp"
         android:maxHeight="32dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_menu_mylocation"
+        android:src="@drawable/spot_meter"
         android:alpha="0.9"
         android:contentDescription="@string/camera_reticle_desc" />
     <TextView
