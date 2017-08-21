@@ -64,26 +64,12 @@ public class SlideshowDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Called onCreate");
-
-
-        /*if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.X_icon);
-        }
-        else
-            Log.e(TAG, "Toolbar is NULL!");
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-
-
-        //setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppCompat);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         //Log.d(TAG, "Called onCreateView");
         View v = inflater.inflate(R.layout.fragment_image_slider, container, false);
@@ -142,21 +128,6 @@ public class SlideshowDialogFragment extends DialogFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "Called onOptionsItemSelected");
-        // handle X button click here
-        switch (item.getItemId()) {
-            // action with ID action_refresh was selected
-            case R.id.close_slideshow:
-                Log.d(TAG, "Pressed X Button!");
-                onBackPressed();
-                break;
-            default: return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    @Override
     public void onDestroy() {
         Log.d(TAG, "Called onDestroy");
 
@@ -164,11 +135,6 @@ public class SlideshowDialogFragment extends DialogFragment {
         galleryActivity.refreshView();
 
         super.onDestroy();
-    }
-
-    public boolean onBackPressed() {
-        Log.d(TAG, "Called onBackPressed");
-        return getChildFragmentManager().popBackStackImmediate();
     }
 
     private void setCurrentItem(int position) {

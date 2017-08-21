@@ -73,6 +73,9 @@ import java.util.Locale;
  * A prototype Android street view app using infrared overlays. This expands from
  * an example activity provided by FLIR One.
  *
+ * Note: hardwareAccelerated is set to "false" in the Manifest file for this activity
+ * because faulty address errors may rarely occur when the FLIR camera is plugged in.
+ *
  * @see SystemUiHider
  * @see com.flir.flironesdk.Device.Delegate
  * @see com.flir.flironesdk.FrameProcessor.Delegate
@@ -82,10 +85,11 @@ import java.util.Locale;
 public class PreviewActivity extends Activity implements Device.Delegate, FrameProcessor.Delegate, Device.StreamDelegate, Device.PowerUpdateDelegate {
 
     private static final String TAG = PreviewActivity.class.getSimpleName();
-    private static boolean requestingPermission = false;
+    private static boolean amRequestingRead, amRequestingWrite, didRequestGPS, didRequestLocation;
     private static String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
     private static final int MY_PERMISSIONS_REQUEST_READ_IMAGES = 1, MY_PERMISSIONS_REQUEST_WRITE_IMAGES = 2,
-            MY_PERMISSIONS_REQUEST_LOCATION = 3, MY_PERMISSIONS_REQUEST_INTERNET_ACCESS = 4;
+            MY_PERMISSIONS_REQUEST_GPS = 3, MY_PERMISSIONS_REQUEST_LOCATION = 4;
+
 
     ImageView thermalImageView;
     private volatile boolean imageCaptureRequested = false;
@@ -129,44 +133,71 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * Indicate to the user that the device has been connected by showing camera footage.
      * @param device The FLIR One camera
      */
-    public void onDeviceConnected(Device device) {
-        //Log.i(TAG, "Called onDeviceConnected; Device connected!");
+    public void onDeviceConnected(final Device device) {
+        Log.i(TAG, "Called onDeviceConnected; Device connected!");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (device == null) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                    alert.setTitle("Device Connection Error");
+                    alert.setMessage("There was an error detecting your FLIR ONE camera. Please try reconnecting it.");
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    });
+                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                        }
+                    });
+                    alert.show();
+                    return;
+                }
                 findViewById(R.id.pleaseConnect).setVisibility(View.GONE);
+                findViewById(R.id.spotMeterIcon).setVisibility(View.VISIBLE);
+                findViewById(R.id.spotMeterValue).setVisibility(View.VISIBLE);
             }
         });
-        
-        flirOneDevice = device;
-        AUTO_HIDE = true;
-        quickHide();
-        flirOneDevice.setPowerUpdateDelegate(this);
-        flirOneDevice.startFrameStream(this);
 
-        final ToggleButton chargeCableButton = findViewById(R.id.chargeCableToggle);
-        if (flirOneDevice instanceof SimulatedDevice) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    chargeCableButton.setChecked(chargeCableIsConnected);
-                    chargeCableButton.setVisibility(View.VISIBLE);
-                    isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
-                }
-            });
-        }
-        else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    chargeCableButton.setChecked(chargeCableIsConnected);
-                    chargeCableButton.setVisibility(View.INVISIBLE);
-                    findViewById(R.id.connect_sim_button).setEnabled(false);
-                }
-            });
-        }
+        if (device != null) {
+            flirOneDevice = device;
+            sensorHelper.requestUpdates();
+            AUTO_HIDE = true;
+            quickHide();
+            while (flirOneDevice == null) {
+                Log.e(TAG, "STILL SETTING THE DEVICE; device is " + device);
+                SystemClock.sleep(100);
+                flirOneDevice = device;
+            }
+            Log.e(TAG, "NOT NULL ANYMORE!");
+            flirOneDevice.setPowerUpdateDelegate(this);
+            flirOneDevice.startFrameStream(this);
 
-        orientationEventListener.enable();
+            final ToggleButton chargeCableButton = findViewById(R.id.chargeCableToggle);
+            if (flirOneDevice instanceof SimulatedDevice) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chargeCableButton.setChecked(chargeCableIsConnected);
+                        chargeCableButton.setVisibility(View.VISIBLE);
+                        isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
+                    }
+                });
+            }
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chargeCableButton.setChecked(chargeCableIsConnected);
+                        chargeCableButton.setVisibility(View.INVISIBLE);
+                        findViewById(R.id.connect_sim_button).setEnabled(false);
+                    }
+                });
+            }
+
+            orientationEventListener.enable();
+        }
     }
 
     /**
@@ -175,7 +206,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     public void onDeviceDisconnected(Device device) {
         Log.w(TAG, "Called onDeviceDisconnected; Device disconnected!");
-        SystemClock.sleep(35); //prevents last image from being displayed after device is disconnected
+        //SystemClock.sleep(35); //prevents last image from being displayed after device is disconnected
         final ToggleButton chargeCableButton = findViewById(R.id.chargeCableToggle);
         final TextView levelTextView = findViewById(R.id.batteryLevelTextView);
         final ImageView chargingIndicator = findViewById(R.id.batteryChargeIndicator);
@@ -183,7 +214,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             @Override
             public void run() {
                 findViewById(R.id.pleaseConnect).setVisibility(View.VISIBLE);
-                thermalImageView.setImageBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
+                findViewById(R.id.spotMeterIcon).setVisibility(View.GONE);
+                findViewById(R.id.spotMeterValue).setVisibility(View.GONE);
+                ((TextView) findViewById(R.id.spotMeterValue)).setText("");
                 levelTextView.setText("--");
                 chargeCableButton.setChecked(chargeCableIsConnected);
                 chargeCableButton.setVisibility(View.INVISIBLE);
@@ -192,10 +225,11 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 findViewById(R.id.tuningProgressBar).setVisibility(View.GONE);
                 findViewById(R.id.tuningTextView).setVisibility(View.GONE);
                 findViewById(R.id.connect_sim_button).setEnabled(true);
-                ((TextView) findViewById(R.id.spotMeterValue)).setText("");
+                flirOneDevice = null;
+                thermalImageView.setImageBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
             }
         });
-        flirOneDevice = null;
+        sensorHelper.stopUpdates();
         AUTO_HIDE = false;
         mHideHandler.removeCallbacks(mHideRunnable);
         orientationEventListener.disable();
@@ -252,7 +286,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     @Override
     public void onBatteryChargingStateReceived(final Device.BatteryChargingState batteryChargingState) {
-        //Log.i(TAG, "Called onBatteryChargingStateReceived; Battery charging state received!");
+        Log.i(TAG, "Called onBatteryChargingStateReceived; Battery charging state received!");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -289,7 +323,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     @Override
     public void onBatteryPercentageReceived(final byte percentage) {
-        //Log.i(TAG, "Called onBatteryPercentageReceived; Battery percentage received!");
+        Log.i(TAG, "Called onBatteryPercentageReceived; Battery percentage received!");
 
         final TextView levelTextView = findViewById(R.id.batteryLevelTextView);
         runOnUiThread(new Runnable() {
@@ -305,11 +339,14 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * @param frame The current frame's bitmap
      */
     private void updateThermalImageView(final Bitmap frame) {
-        //Log.v(TAG, "Called updateThermalImageView");
+        //Log.d(TAG, "Called updateThermalImageView");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                thermalImageView.setImageBitmap(frame);
+                if (flirOneDevice != null)
+                    thermalImageView.setImageBitmap(frame);
+                else
+                    thermalImageView.setImageBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
             }
         });
     }
@@ -319,7 +356,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      * @param frame The current frame
      */
     public void onFrameReceived(Frame frame) {
-        //Log.v(TAG, "Frame received!");
+        //Log.d(TAG, "Frame received!");
 
         if (currentTuningState != Device.TuningState.InProgress) {
             frameProcessor.processFrame(frame);
@@ -457,8 +494,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     String fileName = "FLIROne-" + formattedDate;
 
                     //does the filename already exist? If so, name it slightly different until it's unique
-                    String uniqueName = path + "/" + fileName + ".jpg";
-                    File newFile = new File(uniqueName);
+                    String uniqueName = fileName;
+                    File newFile = new File(path, uniqueName + ".jpg");
                     int i = 0;
                     while (newFile.exists()) {
                         uniqueName = fileName + "(" + i + ")";
@@ -468,7 +505,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
                     //try to save the image
                     try {
-                        lastSavedPath = uniqueName;
+                        lastSavedPath = newFile.getPath();
                         //if permission is still needed to save the image, save the frame and then ask for permission
                         if (isPermissionNeeded(MY_PERMISSIONS_REQUEST_WRITE_IMAGES))
                             lastFrame = renderedImage.getFrame();
@@ -476,38 +513,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                         //image will not be saved if asked for permission; save it in an instance variable and save it upon acceptance
                         renderedImage.getFrame().save(newFile, RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
 
-                        MediaScannerConnection.scanFile(PreviewActivity.this,
-                                new String[]{ newFile.getPath() }, null,
-                                new MediaScannerConnection.OnScanCompletedListener() {
-                                    @Override
-                                    public void onScanCompleted(String path, Uri uri) {
-                                        Log.i("ExternalStorage", "Scanned " + path + ":");
-                                        Log.i("ExternalStorage", "-> uri=" + uri);
-
-                                        //If file does not exist, skip writing location data to it
-                                        if (path == null || uri == null || LocationProvider.getInstance().getLocation() == null)
-                                            return;
-
-                                        try {
-                                            //Write the GPS location if Location permissions are accepted
-                                            Location current = LocationProvider.getInstance().getLocation();
-                                            double latitude = current.getLatitude(), longitude = current.getLongitude();
-
-                                            File image = new File(path);
-                                            Log.d(TAG, "PATH is " + path);
-                                            ExifInterface exif = new ExifInterface(image.getAbsolutePath());
-                                            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, GPS.convert(latitude));
-                                            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, GPS.latitudeRef(latitude));
-                                            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, GPS.convert(longitude));
-                                            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(longitude));
-                                            exif.saveAttributes();
-                                        }
-                                        catch (IOException e) {
-                                        // do something
-                                        Log.d(TAG, "IOException prevented saving location data to EXIF: " + e.getMessage());
-                                        }
-                                    }
-                                });
+                        scanFile(newFile.getAbsolutePath());
                     }
                     catch (Exception e) {
                         Log.e(TAG, "Error saving image: " + e.getMessage());
@@ -568,22 +574,90 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
     }
 
     /**
+     * Scans a file and prints the path and content uri after it is scanned.
+     * @param path The path of the image to save
+     */
+    private void scanFile(String path) {
+        MediaScannerConnection.scanFile(PreviewActivity.this,
+                new String[] { path }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("TAG", "Finished scanning " + path + "; URI is " + uri);
+
+                        //Write the GPS location if Location permissions are accepted
+                        if (!isPermissionNeeded(MY_PERMISSIONS_REQUEST_GPS) && !isPermissionNeeded(MY_PERMISSIONS_REQUEST_LOCATION)) {
+                            Location currentLocation = LocationProvider.getInstance().getLocation();
+                            geoTagImage(path, currentLocation);
+                        }
+                    }
+                }
+        );
+        //getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(path))));
+    }
+
+    /**
+     * Marks an image's EXIF with geotag information.
+     * @param imagePath The path of the image
+     * @param location An image's location
+     */
+    public void geoTagImage(String imagePath, Location location)
+    {
+        try {
+            ExifInterface exif = new ExifInterface(imagePath);
+            Log.e(TAG, "EXIF IS " + exif + " and its path is " + imagePath);
+            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, GPS.convert(location.getLatitude()));
+            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, GPS.latitudeRef(location.getLatitude()));
+            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, GPS.convert(location.getLongitude()));
+            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(location.getLongitude()));
+            exif.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, String.valueOf(location.getAltitude()));
+            //SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            //exif.setAttribute(ExifInterface.TAG_DATETIME, fmt_Exif.format(new Date(location.getTime())));
+            exif.saveAttributes();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Requests permissions for reading from memory if viewing the Gallery or writing to memory
      * if trying to take a picture.
      * @param permissionType The type of permission (Read = 1, Write = 2)
      */
     public boolean isPermissionNeeded(int permissionType) {
-        //if we are already requesting permission, we should indicate that permission
-        //is still needed for whatever is calling on this method just to be safe
-        if (requestingPermission)
-            return false;
-
         switch (permissionType) {
             case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED)
                     return false;
-                requestingPermission = true;
+                break;
+            }
+            case MY_PERMISSIONS_REQUEST_WRITE_IMAGES: {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED)
+                    return false;
+                break;
+            }
+            case MY_PERMISSIONS_REQUEST_GPS: {
+                LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (service.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                    return false;
+                break;
+            }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED )
+                    return false;
+                break;
+            }
+            default:
+        }
+
+        Log.e(TAG, "PERMISSION IS STILL NEEDED FOR " + permissionType);
+
+        switch (permissionType) {
+            case MY_PERMISSIONS_REQUEST_READ_IMAGES: {
+                amRequestingRead = true;
                 // Should we show an explanation for the permission we're requesting?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -604,14 +678,14 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     ActivityCompat.requestPermissions(PreviewActivity.this,
-                                            new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                                            new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
                                             MY_PERMISSIONS_REQUEST_READ_IMAGES);
                                 }
                             });
                             alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialogInterface) {
-                                    requestingPermission = false;
+                                    amRequestingRead = false;
                                 }
                             });
                             alert.show();
@@ -621,16 +695,13 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 else {
                     // No explanation needed, we can request the permission immediately.
                     ActivityCompat.requestPermissions(PreviewActivity.this,
-                            new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
+                            new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
                             MY_PERMISSIONS_REQUEST_READ_IMAGES);
                 }
                 return true;
             }
             case MY_PERMISSIONS_REQUEST_WRITE_IMAGES: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED)
-                    return false;
-                requestingPermission = true;
+                amRequestingWrite = true;
                 if (ActivityCompat.shouldShowRequestPermissionRationale(PreviewActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     runOnUiThread(new Runnable() {
@@ -642,13 +713,13 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                                     + "please allow this app to access storage first.");
                             alert.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    requestingPermission = false;
+                                    amRequestingWrite = false;
                                 }
                             });
                             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     ActivityCompat.requestPermissions(PreviewActivity.this,
-                                            new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                                            new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
                                             MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
                                 }
                             });
@@ -658,9 +729,72 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                 }
                 else {
                     ActivityCompat.requestPermissions(PreviewActivity.this,
-                            new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                            new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
                             MY_PERMISSIONS_REQUEST_WRITE_IMAGES);
                 }
+                return true;
+            }
+            case MY_PERMISSIONS_REQUEST_GPS: {
+                if (didRequestGPS)
+                    return true;
+                didRequestGPS = true;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                        alert.setTitle("Please Turn on GPS");
+                        alert.setMessage("In order to track where images are taken, first enable " +
+                                "the GPS setting and then enable the Location permission for this app.");
+                        alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(intent);
+                            }
+                        });
+                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                            }
+                        });
+                        alert.show();
+                    }
+                });
+                return true;
+            }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                if (didRequestLocation)
+                    return true;
+                didRequestLocation = true;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
+                        alert.setTitle("Please Grant Location Permission");
+                        alert.setMessage("In order to track where images are taken, " +
+                                "please enable location permissions.");
+                        alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        });
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ActivityCompat.requestPermissions(PreviewActivity.this,
+                                        new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        });
+                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                            }
+                        });
+                        alert.show();
+                    }
+                });
                 return true;
             }
             default:
@@ -695,7 +829,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                         if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
                             //allowed
                             Log.i("allowed", permission);
-                        } else {
+                        }
+                        else {
                             //set to never ask again
                             Log.i("set to never ask again", permission);
                             somePermissionsForeverDenied = true;
@@ -716,7 +851,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             category = "Storage";
                             break;
                         case MY_PERMISSIONS_REQUEST_LOCATION:
-                            action = "save where you take photos";
+                            action = "geotag photos";
                             category = "Location";
                             break;
                         default:
@@ -724,9 +859,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             category = "the desired permission";
                     }
 
-
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                    alertDialogBuilder.setTitle("Use Settings To Adjust Permissions")
+                    alertDialogBuilder.setTitle("Open Settings To Adjust Permissions")
                             .setMessage("You have opted out of receiving requests to enable " +
                                     "permissions in this app. To " + action + ", please " +
                                     "tap Settings, Permissions, and allow " + category + ".")
@@ -736,13 +870,14 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     switch (requestCode) {
                                         case MY_PERMISSIONS_REQUEST_READ_IMAGES:
                                             intentType = Settings.ACTION_INTERNAL_STORAGE_SETTINGS;
+                                            amRequestingRead = false;
                                             break;
                                         case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
                                             intentType = Settings.ACTION_INTERNAL_STORAGE_SETTINGS;
+                                            amRequestingWrite = false;
                                             break;
                                         case MY_PERMISSIONS_REQUEST_LOCATION:
                                             intentType = Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
@@ -754,7 +889,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                                     Intent intent = new Intent(intentType, Uri.fromParts("package", getPackageName(), null));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-                                    requestingPermission = false;
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -765,7 +899,14 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                             .setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialogInterface) {
-                                    requestingPermission = false;
+                                    switch (requestCode) {
+                                        case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                                            amRequestingRead = false;
+                                            break;
+                                        case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
+                                            amRequestingWrite = false;
+                                            break;
+                                    }
                                 }
                             })
                             .setCancelable(true)
@@ -781,7 +922,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     if (lastFrame != null && lastSavedPath != null) {
                         try {
                             lastFrame.save(new File(lastSavedPath), RenderedImage.Palette.Iron, RenderedImage.ImageType.BlendedMSXRGBA8888Image);
-                            getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(lastSavedPath))));
                         }
                         catch (IOException e) {
                             Log.e(TAG, "Could not save image after accepting permissions: " + e.getMessage());
@@ -802,8 +942,17 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
-        if (!somePermissionsForeverDenied)
-            requestingPermission = false;
+        //indicate we are no longer requesting permission if we accepted them or they were denied not permanently
+        if (!somePermissionsForeverDenied) {
+            switch (requestCode) {
+                case MY_PERMISSIONS_REQUEST_READ_IMAGES:
+                    amRequestingRead = false;
+                    break;
+                case MY_PERMISSIONS_REQUEST_WRITE_IMAGES:
+                    amRequestingWrite = false;
+                    break;
+            }
+        }
     }
 
     /**
@@ -849,16 +998,13 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
      */
     public void onCaptureImageClicked(View v) {
         if (flirOneDevice == null) {
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
-
-                    alert.setTitle("FLIR One Not Found");
-                    alert.setMessage("In order to take a picture, please connect a FLIR One camera.");
-
-                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    alert.setTitle("FLIR One Not Found")
+                            .setMessage("In order to take a picture, please connect a FLIR One camera.")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         }
                     });
@@ -899,6 +1045,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             }
         }
         else if (flirOneDevice instanceof SimulatedDevice) {
+            flirOneDevice.stopFrameStream();
             flirOneDevice.close();
             flirOneDevice = null;
         }
@@ -946,7 +1093,7 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         if (((ToggleButton) v).isChecked()) {
             // only show palette list if selected image type is colorized
             paletteListView.setVisibility(View.INVISIBLE);
-            for (RenderedImage.ImageType imageType : frameProcessor.getImageTypes()) {
+            for (RenderedImage.ImageType imageType: frameProcessor.getImageTypes()) {
                 if (imageType.isColorized()) {
                     paletteListView.setVisibility(View.VISIBLE);
                     break;
@@ -1249,10 +1396,6 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
             }
         });
 
-        //Verify if GPS is on to enable Location permission
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
         //Get sensor for quaternion data
         if (sensorHelper == null) {
             Log.d(TAG, "Will add sensor now...");
@@ -1266,82 +1409,25 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e(TAG, "Shake detected!");
-                            //display a toast saying to move up, down, left, or right more, based on angles
+                            Log.e(TAG, "Called onAngleUpdate!");
+                            //display a toast saying to move up, down, left, or right more, based on positioning?
 
                         }
                     }).start();
                 }
             });
-            Log.d(TAG, "Sensor is: " + sensorHelper);
         }
 
-        // check if enabled and if not send user to the GPS settings
-        // Better solution would be to display a dialog and suggesting to
-        // go to the settings
-        if (!enabled) {
-            requestingPermission = true;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
-                    alert.setTitle("Please Turn on GPS");
-                    alert.setMessage("In order to track where images are taken, first enable " +
-                            "the GPS setting and then enable the Location permission for this app.");
-                    alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }
-                    });
-                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivity(intent);
-                            requestingPermission = false;
-                        }
-                    });
-                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            requestingPermission = false;
-                        }
-                    });
-                    alert.show();
-                }
-            });
-        }
+        amRequestingRead = false;
+        amRequestingWrite = false;
+        didRequestGPS = false;
+        didRequestLocation = false;
+
+        //Verify if GPS is on to enable Location permission
+        isPermissionNeeded(MY_PERMISSIONS_REQUEST_GPS);
 
         //If we are opening the app freshly, request location permissions with an explanation.
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestingPermission = true;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(PreviewActivity.this);
-                    alert.setTitle("Please Grant Location Permission");
-                    alert.setMessage("In order to track where images are taken, " +
-                            "please enable location permissions.");
-                    alert.setNegativeButton("Later", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }
-                    });
-                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(PreviewActivity.this,
-                                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
-                                    MY_PERMISSIONS_REQUEST_LOCATION);
-                        }
-                    });
-                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            requestingPermission = false;
-                        }
-                    });
-                    alert.show();
-                }
-            });
-        }
+        isPermissionNeeded(MY_PERMISSIONS_REQUEST_LOCATION);
 
         //Attempt to record where photos are taken for later processing
         /*LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -1388,6 +1474,8 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         thermalImageView = findViewById(R.id.imageView);
         if (Device.getSupportedDeviceClasses(this).contains(FlirUsbDevice.class)) {
             findViewById(R.id.pleaseConnect).setVisibility(View.VISIBLE);
+            findViewById(R.id.spotMeterIcon).setVisibility(View.GONE);
+            findViewById(R.id.spotMeterValue).setVisibility(View.GONE);
         }
         try {
             Device.startDiscovery(this, this);
@@ -1417,7 +1505,9 @@ public class PreviewActivity extends Activity implements Device.Delegate, FrameP
         }
         LocationProvider.getInstance().requestUpdates();
 
-        sensorHelper.requestUpdates();
+        //to save phone battery, only use sensor when flir device is connected and the camera activity is open
+        if (flirOneDevice != null)
+            sensorHelper.requestUpdates();
     }
 
     @Override

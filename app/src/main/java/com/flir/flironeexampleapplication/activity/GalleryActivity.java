@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -117,21 +118,10 @@ public class GalleryActivity extends AppCompatActivity {
                 bundle.putSerializable("images", images);
                 bundle.putInt("position", position);
 
-                Fragment f1 = getSupportFragmentManager().findFragmentById(android.R.id.content);
-                Log.d(TAG, "f1 is " + f1);
-
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 slideshowDialogFragment = SlideshowDialogFragment.newInstance();
                 slideshowDialogFragment.setArguments(bundle);
-
-                //ft.replace(android.R.id.content, slideshowDialogFragment, slideshowDialogFragment.TAG);
-                        //.addToBackStack(slideshowDialogFragment.TAG)
-                        //.commit();
-
                 slideshowDialogFragment.show(ft, "slideshow");
-
-                Fragment f2 = getSupportFragmentManager().findFragmentById(android.R.id.content);
-                Log.d(TAG, "fragment is " + f2);
             }
 
             /**
@@ -658,9 +648,7 @@ public class GalleryActivity extends AppCompatActivity {
                 break;
             case R.id.close_slideshow:
                 Log.i(TAG, "CLOSE SELECTED");
-                //slideshowDialogFragment.onBackPressed();
-                //getSupportFragmentManager().findFragmentById(android.R.id.content).getActivity().onBackPressed();
-                //((SlideshowDialogFragment) getSupportFragmentManager().findFragmentById(android.R.id.content)).onBackPressed();
+                slideshowDialogFragment.dismiss();
                 break;
             default: return super.onOptionsItemSelected(item);
         }
@@ -953,7 +941,12 @@ public class GalleryActivity extends AppCompatActivity {
             }
             exif.saveAttributes();
 
-            Uri uri = getContentUriForFilePath(image.getPath(), getApplicationContext());
+            Uri uri = getContentUriFromPath(image.getPath(), getApplicationContext());
+
+            if (uri == null) {
+                Log.e(TAG, "Image uri is null! Cannot update EXIF information for image.");
+                return;
+            }
             if (getApplicationContext().getContentResolver().update(uri, values, null, null) > 0) {
                 Log.d(TAG, "Setting orientation was successful");
             }
@@ -993,24 +986,20 @@ public class GalleryActivity extends AppCompatActivity {
      * @param context A context used for getting a Cursor to the Uri
      * @return The content Uri for the file
      */
-    public Uri getContentUriForFilePath(String path, Context context) {
-        String[] projection = {
-                MediaStore.Images.Media._ID
-        };
+    public Uri getContentUriFromPath(String path, Context context) {
+        String[] projection = { MediaStore.Images.Media._ID };
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                MediaStore.Images.Media.DATA + " = ?", new String[] {
-                        path
-                }, null);
+                MediaStore.Images.Media.DATA + " = ?", new String[] { path }, null);
         Uri result = null;
         if (cursor != null) {
             try {
                 if (cursor.moveToNext()) {
                     long mediaId = cursor.getLong(0);
-                    result = ContentUris.withAppendedId(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mediaId);
+                    result = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mediaId);
                 }
-            } finally {
+            }
+            finally {
                 cursor.close();
             }
         }
@@ -1018,7 +1007,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void openInAnotherApp(int action, Image image) {
-
+        //Log.d(TAG, "Called openInAnotherApp");
         Bitmap bmp = image.getBitmap();
         String sendMessage;
 
@@ -1026,27 +1015,25 @@ public class GalleryActivity extends AppCompatActivity {
             Log.e(TAG, "Bitmap is null! Cannot open in another app.");
         else {
             Intent intent;
+            Uri uri = getContentUriFromPath(image.getPath(), getApplicationContext());
             switch (action) {
                 case VIEW_IN_APP:
                     intent = new Intent(Intent.ACTION_VIEW);
                     sendMessage = "View IR Image With...";
+                    intent.setDataAndType(uri, "image/*");
                     break;
                 case SHARE_OR_SEND:
                     intent = new Intent(Intent.ACTION_SEND);
                     sendMessage = "Share IR Image With...";
+                    intent.setType("image/*");
                     break;
-                default: return;
+                default:
+                    return;
             }
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-            String imagePath = insertImage(getContentResolver(),
-                    bmp, image.getName(), null);
-            Uri imageUri = Uri.parse(imagePath);
-            intent.setDataAndType(imageUri, "image/*");
-            intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(Intent.createChooser(intent, sendMessage));
         }
-        deletePhoto(image);
     }
 
     private void deletePhoto(Image image) {
