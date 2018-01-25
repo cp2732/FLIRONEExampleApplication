@@ -22,7 +22,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/debug" />
     <exclude-output />
@@ -34,7 +34,6 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/test/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/debug" isTestSource="true" generated="true" />
@@ -42,6 +41,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/test/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -103,42 +103,42 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-core-ui-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="icepick-3.2.0" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v13-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="flironesdk-" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="data.priority-map-0.0.2" level="project" />
-    <orderEntry type="library" exported="" name="slingshot-0.10.3" level="project" />
-    <orderEntry type="library" exported="" name="exifinterface-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="auto-common-0.3" level="project" />
-    <orderEntry type="library" exported="" name="play-services-basement-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="transition-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="glide-3.8.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-base-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="core.cache-0.6.3" level="project" />
-    <orderEntry type="library" exported="" name="play-services-location-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
-    <orderEntry type="library" exported="" name="icepick-processor-3.2.0" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="quoin-0.1.2" level="project" />
-    <orderEntry type="library" exported="" name="auto-service-1.0-rc2" level="project" />
-    <orderEntry type="library" exported="" name="scout-0.1.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="stencil-0.3.5" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-26.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
-    <orderEntry type="library" exported="" name="butterknife-8.0.1" level="project" />
-    <orderEntry type="library" exported="" name="clojure-1.7.0" level="project" />
-    <orderEntry type="library" exported="" name="butterknife-annotations-8.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
-    <orderEntry type="library" exported="" name="design-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-tasks-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="frankiesardo:icepick:3.2.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-media-compat-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:recyclerview-v7-26.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit:junit:4.12@jar" level="project" />
+    <orderEntry type="library" exported="" name="frankiesardo:icepick-processor:3.2.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-fragment-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-annotations:26.0.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="scout:scout:0.1.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-vector-drawable-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="org.clojure:clojure:1.7.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.auto.service:auto-service:1.0-rc2@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:appcompat-v7-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-basement-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="com.github.bumptech.glide:glide:3.8.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.guava:guava:18.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="stencil:stencil:0.3.5@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-core-utils-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="org.clojure:core.cache:0.6.3@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-core-ui-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.jakewharton:butterknife-annotations:8.0.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="flironesdk:@aar" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="org.hamcrest:hamcrest-core:1.3@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-compat-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:exifinterface-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tasks-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="slingshot:slingshot:0.10.3@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.auto:auto-common:0.3@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-v4-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:animated-vector-drawable-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-v13-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:transition-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:design-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.jakewharton:butterknife-8.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-location-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="quoin:quoin:0.1.2@jar" level="project" />
+    <orderEntry type="library" exported="" name="org.clojure:data.priority-map:0.0.2@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-base-11.0.4" level="project" />
   </component>
 </module>

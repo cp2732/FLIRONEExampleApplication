@@ -56,12 +56,12 @@
         "source": "/Users/cp2732/.android/build-cache/428d4071c7d3dfd8dbd77caf634a6cd20e288413/output/res/drawable/common_google_signin_btn_icon_dark_focused.xml"
     },
     {
-        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable/abc_switch_thumb_material.xml",
-        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable/abc_switch_thumb_material.xml"
-    },
-    {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable/abc_vector_test.xml",
         "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable/abc_vector_test.xml"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable/abc_switch_thumb_material.xml",
+        "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/drawable/abc_switch_thumb_material.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_dark.xml",

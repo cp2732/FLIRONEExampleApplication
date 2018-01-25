@@ -94,7 +94,7 @@ public class SensorHelper implements SensorEventListener {
     // consider storing these readings as unit vectors.
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d(TAG, "Called onSensorChanged");
+        //Log.d(TAG, "Called onSensorChanged");
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             System.arraycopy(event.values, 0, mAccelerometerReading,
                     0, mAccelerometerReading.length);
@@ -110,7 +110,7 @@ public class SensorHelper implements SensorEventListener {
     // Compute the three orientation angles based on the most recent readings from
     // the device's accelerometer and magnetometer.
     private void updateOrientationAngles() {
-        Log.d(TAG, "Called updateOrientationAngles");
+        //Log.d(TAG, "Called updateOrientationAngles");
         // Update rotation matrix, which is needed to update orientation angles.
         mSensorManager.getRotationMatrix(mRotationMatrix, null,
                 mAccelerometerReading, mMagnetometerReading);

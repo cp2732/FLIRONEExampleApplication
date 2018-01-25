@@ -16,12 +16,12 @@
         "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/layout/abc_alert_dialog_material.xml"
     },
     {
-        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
-        "source": "/Users/cp2732/.android/build-cache/e24fb0ba0def886b5f042d35bb50edad130b6296/output/res/layout/notification_media_action.xml"
-    },
-    {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
         "source": "/Users/cp2732/.android/build-cache/4fcd3339b1f9d3b1deed8fa8cb5a1fab6ee94436/output/res/layout/abc_popup_menu_header_item_layout.xml"
+    },
+    {
+        "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
+        "source": "/Users/cp2732/.android/build-cache/e24fb0ba0def886b5f042d35bb50edad130b6296/output/res/layout/notification_media_action.xml"
     },
     {
         "merged": "/Users/cp2732/AndroidStudioProjects/FLIROneSDKBundle/FLIRONEExampleApplication/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
